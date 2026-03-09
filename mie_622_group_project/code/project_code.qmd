@@ -56,9 +56,3 @@ testing_data <- pj_data[index, ]
 model.fwd <- regsubsets(`Age at enrollment` ~.,data = pj_data, nvmax = 36, method = "forward") # nvmax = 36 because we have 36 independent variables
 summary(model.fwd)
 ```
-
-```{r}
-# Let's develop MLR models to predict student academic performance
-mlr0 <- lm(`Age at enrollment` ~ ., data = pj_data)
-summary(mlr0)
-```
