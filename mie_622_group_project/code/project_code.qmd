@@ -53,6 +53,6 @@ training_data <- pj_data[-index, ]
 testing_data <- pj_data[index, ]
 
 # perfom forward stepwise selection
-model.fwd <- regsubsets(`Age at enrollment` ~.,data = pj_data, nvmax = 36, method = "forward") # nvmax = 36 because we have 36 independent variables
-summary(model.fwd)
+model.bestsubset <- regsubsets(`Age at enrollment` ~.,data = pj_data, nvmax = 36) # nvmax = 36 because we have 36 independent variables
+summary(model.bestsubset)
 ```
