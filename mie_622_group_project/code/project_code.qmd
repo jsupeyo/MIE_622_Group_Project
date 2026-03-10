@@ -16,6 +16,7 @@ library(readxl)
 library(here) # sets path to your folder directory
 library(leaps) # for variable selection methods
 library(ggplot2)
+library(caret)
 ```
 
 ```{r}
@@ -54,6 +55,45 @@ pj_data |>
 Let's develop a multivariate linear regression model to predict student academic performance.
 
 Since we have many independent variables, a multivariate linear regression would be ideal. We have 37 variables and therefore, we can 36 (i.e.,37-1) independent variables.
+
+Since the outcome (Y) is 'Age at enrollment' what we want to predict Let's split the data 70% training and 30% testing
+
+```{r}
+set.seed(123)  # setting a seed for reproducibility of the random split
+index <- createDataPartition(pj_data$`Age at enrollment`, p = 0.3, list = FALSE)
+training_data <- pj_data[-index, ]
+testing_data <- pj_data[index, ]
+```
+
+Check summary statistics of the outcome "Age at enrollment" in training and testing data
+
+```{r}
+summary(training_data$`Age at enrollment`)
+summary(training_data$`Age at enrollment`)
+```
+
+Let's develop an MLR to predict 'Age at enrollment' using all other 36 variables as independent variables
+
+```{r}
+fitdata <- lm(`Age at enrollment`~., data = training_data)
+summary(fitdata)
+```
+
+Adjusted R-squared: 0.5775 low and 20 of the independent variables are significant at the 0.05 significance level
+
+checking model assumptions
+
+-   Normality: Residuals are normally distributed with a mean of 0
+
+-   Linear relationship between X and Y --\> check residual plot
+
+-   Constant variance among residuals: Linear regression assumes the variance among error terms are constant (also called: homoscedasticity).
+
+check normality assumption by plotting the histogram of residuals and how much it resembles a normal distribution/
+
+```{r}
+##### To continue from here.
+```
 
 To find a good model that shows this relationship between the dependent and independent variables, we will use the 'forward step wise' variable selection method to select predictor variables that will be good for our model.
 
