@@ -17,7 +17,6 @@ library(here) # sets path to your folder directory
 library(leaps) # for variable selection methods
 library(ggplot2)
 library(caret)
-library(heatmaply)
 ```
 
 ```{r}
@@ -158,7 +157,7 @@ ggplot(plot_data, aes(x = fitted, y = residuals)) +
               color = "orange", 
               se = FALSE) +
   theme_minimal() +
-  labs(title = "Residuals vs Fitted after Log Transformation",
+  labs(title = "Residuals vs Fitted Plot",
        x = "Fitted Values",
        y = "Residuals")
 ```
@@ -186,12 +185,16 @@ ggplot(plot_data_1, aes(x = fitted, y = residuals)) +
               color = "orange", 
               se = FALSE) +
   theme_minimal() +
-  labs(title = "Residuals vs Fitted",
+  labs(title = "Residuals vs Fitted Plot after Log Transformation",
        x = "Fitted Values",
        y = "Residuals")
 ```
 
 Even after log transformation, the relationship being linear assumption is violated
+
+```{r}
+## We will start here next time
+```
 
 Let's check for collinearity between the numerical independent variables
 
