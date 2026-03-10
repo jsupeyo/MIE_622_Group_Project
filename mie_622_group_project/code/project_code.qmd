@@ -15,6 +15,7 @@ library(tidyverse)
 library(readxl) 
 library(here) # sets path to your folder directory
 library(leaps) # for variable selection methods
+library(ggplot2)
 ```
 
 ```{r}
@@ -38,6 +39,17 @@ str(pj_data) # confirm categorization of the column
 ```
 
 For our research question, "Does age at enrollment contribute to student academic dropout and failure in higher education?", we will take 'Age at Enrollment' as the dependent (Y) variable that we can predict using the other variables as the independent variables.
+
+```{r}
+# Let's take a look at the distribution of our variable of interest
+pj_data |>
+  select(`Age at enrollment`)|>
+  ggplot(aes(x = `Age at enrollment`))+
+           geom_histogram(bins = 50, fill = "steelblue", color = "white")+
+  theme_minimal()+
+  labs( title = "Histogram of Age at Enrollment")+
+  geom_rug() # show the full breadth of the distribution
+```
 
 Let's develop a multivariate linear regression model to predict student academic performance.
 
