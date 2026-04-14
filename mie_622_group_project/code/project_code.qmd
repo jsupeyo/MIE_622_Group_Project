@@ -207,7 +207,7 @@ index <- sample(1:nrow(pj_data), 0.3 * nrow(pj_data)) # sample 30% of the data f
 training_data <- pj_data[-index, ]
 testing_data <- pj_data[index, ]
 
-# perfom forward stepwise selection
+# perfom bestsubset variable selection method
 model.bestsubset <- regsubsets(`Age at enrollment` ~.,data = pj_data, nvmax = 36) # nvmax = 36 because we have 36 independent variables
 summary(model.bestsubset)
 ```
