@@ -54,9 +54,9 @@ pj_data |>
 
 Let's develop a multivariate linear regression model to predict student academic performance.
 
-Since we have many independent variables, a multivariate linear regression would be ideal. We have 37 variables and therefore, we can 36 (i.e.,37-1) independent variables.
+Since we have many independent variables, a multivariate linear regression would be ideal. We have 37 variables and therefore, we can use 36 (i.e.,37-1) independent variables.
 
-Since the outcome (Y) is 'Age at enrollment' what we want to predict Let's split the data 70% training and 30% testing
+Since the outcome (Y) is 'Age at enrollment' what we want to predict; Let's split the data 70% training and 30% testing
 
 ```{r}
 set.seed(123)  # setting a seed for reproducibility of the random split
@@ -83,16 +83,15 @@ Adjusted R-squared: 0.5775 low and 20 of the independent variables are significa
 
 checking model assumptions
 
--   Normality: Residuals are normally distributed with a mean of 0
+- Normality: Residuals are normally distributed with a mean of 0
 
--   Linear relationship between X and Y --\> check residual plot
+- Linear relationship between X and Y --\> check residual plot
 
--   Constant variance among residuals: Linear regression assumes the variance among error terms are constant (also called: homoscedasticity).
+- Constant variance among residuals: Linear regression assumes the variance among error terms are constant (also called: homoscedasticity).
 
 check normality assumption by plotting the histogram of residuals and how much it resembles a normal distribution/
 
 ```{r}
-##### 
 res0_df <- data.frame(res = as.numeric(model_0$residuals))
 
 # check normality assumption by plotting the histogram of residuals
@@ -208,6 +207,32 @@ training_data <- pj_data[-index, ]
 testing_data <- pj_data[index, ]
 
 # perfom bestsubset variable selection method
-model.bestsubset <- regsubsets(`Age at enrollment` ~.,data = pj_data, nvmax = 36) # nvmax = 36 because we have 36 independent variables
+model.bestsubset <- regsubsets(`Age at enrollment` ~.,data = training_data, nvmax = 36) # nvmax = 36 because we have 36 independent variables
 summary(model.bestsubset)
+```
+
+```{r}
+# Let's examine one or more goodness of fit metrics to select the best overall model
+reg.summary <- summary(model.bestsubset)
+names(reg.summary)
+```
+
+Adjusted R-squared of all best performing model sizes
+
+```{r}
+reg.summary$adjr2
+which.max(reg.summary$adjr2)   # model with 27 independent variables performs the best when using adjusted r-squared as comparison metric
+plot(reg.summary$adjr2 , 
+     xlab = " Number of Variables ", 
+     pch=16,type = "b",
+     main = "Best Subset Selection Method",
+     ylab = " Adjusted R-squared", 
+     col="purple") 
+min(reg.summary$adjr2)
+max(reg.summary$adjr2) 
+```
+
+```{r}
+# Extract the coefficients for the best model
+coef(model.bestsubset,24)
 ```
