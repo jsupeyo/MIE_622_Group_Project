@@ -7,7 +7,7 @@ editor: visual
 
 ## Predicting Students Dropout and Academic Success
 
-Research Question: Does age at enrollment contribute to student academic dropout and failure in higher education?
+Research Question: What are the biggest contributors to student academic dropout and failure in higher education?
 
 ```{r}
 # set up the libraries
@@ -17,6 +17,9 @@ library(here) # sets path to your folder directory
 library(leaps) # for variable selection methods
 library(ggplot2)
 library(caret)
+library(nnet) # for multinomial logistic regression
+library(pROC) # for ROC curve
+library(car) # for stress-testing regression models
 ```
 
 ```{r}
@@ -24,11 +27,12 @@ library(caret)
 pj_data <- read_xlsx(here("data", "project_data.xlsx")) # the data file is in a folder named 'data'
 head(pj_data)
 str(pj_data)
+summary(pj_data)
 ```
 
 ```{r}
-summary(pj_data)
-pj_data <- na.omit(pj_data) # remove any missing values
+# remove any missing values
+pj_data <- na.omit(pj_data) 
 ```
 
 ```{r}
@@ -37,202 +41,99 @@ pj_data <- na.omit(pj_data) # remove any missing values
 col <- c("Target")
 pj_data [, col] <- lapply(pj_data[, col], factor)
 str(pj_data) # confirm categorization of the column
+levels(pj_data$Target)
 ```
 
-For our research question, "Does age at enrollment contribute to student academic dropout and failure in higher education?", we will take 'Age at Enrollment' as the dependent (Y) variable that we can predict using the other variables as the independent variables.
+For our research question, "What are the biggest contributors to student academic dropout and failure in higher education?", we will take 'Target' as the dependent (Y) variable that we can predict using the other variables as the independent variables.
 
 ```{r}
 # Let's take a look at the distribution of our variable of interest
 pj_data |>
-  select(`Age at enrollment`)|>
-  ggplot(aes(x = `Age at enrollment`))+
-           geom_histogram(bins = 50, fill = "steelblue", color = "white")+
+  ggplot(aes(x =Target, fill = Target))+
+           geom_bar()+
   theme_minimal()+
-  labs( title = "Histogram of Age at Enrollment")+
-  geom_rug() # show the full breadth of the distribution
+  labs( title = "Distribution of Student Outcomes",
+        x = "Outcome",
+        y = "Count")
 ```
 
-Let's develop a multivariate linear regression model to predict student academic performance.
+Let's develop a logistic regression model to predict student academic outcome.
 
-Since we have many independent variables, a multivariate linear regression would be ideal. We have 37 variables and therefore, we can use 36 (i.e.,37-1) independent variables.
+Since Target is a categorical variable (3 classes: Dropout, Graduate, Enrolled), we cannot use linear regression as it would require a continuous numeric outcome. Instead, we will use a logistic regression (mulitnomial).
 
-Since the outcome (Y) is 'Age at enrollment' what we want to predict; Let's split the data 70% training and 30% testing
+Since the outcome (Y) is 'Target' what we want to predict; Let's split the data 70% training and 30% testing
 
 ```{r}
 set.seed(123)  # setting a seed for reproducibility of the random split
-index <- createDataPartition(pj_data$`Age at enrollment`, p = 0.3, list = FALSE)
+index <- createDataPartition(pj_data$`Target`, p = 0.3, list = FALSE)
 training_data <- pj_data[-index, ]
 testing_data <- pj_data[index, ]
 ```
 
-Check summary statistics of the outcome "Age at enrollment" in training and testing data
+Check summary statistics of the outcome "Target" in training and testing data
 
 ```{r}
-summary(training_data$`Age at enrollment`)
-summary(training_data$`Age at enrollment`)
+summary(training_data$`Target`)
+summary(testing_data$`Target`)
 ```
 
-Let's develop an MLR to predict 'Age at enrollment' using all other 36 variables as independent variables
+Confirm sizes of the testing and training data
 
 ```{r}
-model_0 <- lm(`Age at enrollment`~., data = training_data)
+cat("Training rows:", nrow(training_data), "\n")
+cat("Testing rows:", nrow(testing_data), "\n")
+```
+
+Confirm class balance is preserved in both sets
+
+```{r}
+prop.table(table(training_data$Target))
+prop.table(table(testing_data$Target))
+```
+
+Before building the model, let's check whether any of our independent variables are highly correlated with each other. If two variables are almost identical, it will confuse the model and inflate the standard errors.
+
+We will use the Variance Inflation Factor(VIF), whereby if vif = 1, we have no correlation at atll, VIF is 1- 5, we moderate correlation (fine), and VIF 5 - 10 we have a higher correlation.
+
+```{r}
+# We first fit a temporary linear model just to extract VIF values - this is a common workaround since vif() requires a linear model object
+temp_model <- lm(as.numeric(Target) ~ ., data = training_data)
+vif_values <- vif(temp_model) # get the vif values from the model
+vif_values[vif_values > 5] # show variables that have vif values greater than 5 (potential collinearity issue)
+```
+
+We have 10 independent variables that have vif values above 5 where 6 of the variables have vif values above 10. For the variables with a vif above 10 we will remove one of them say 'Curricular units 1st sem (enrolled)'.
+
+We can now develop a logistic regression model to predict 'Target' using all other independent variables. Since Target has 3 categories (Dropout, Enrolled, Graduate), we will use multinomial logistic regression i.e., the model will pick one class as the reference/ baseline - by default this will be 'Dropout' as it's the category that comes first alphabetically.
+
+```{r}
+model_0 <- multinom(Target~., data = training_data, maxit = 500)
+# maxit = 500 gives the optimizer more iterations to converge
 summary(model_0)
 ```
 
-Adjusted R-squared: 0.5775 low and 20 of the independent variables are significant at the 0.05 significance level
-
-checking model assumptions
-
-- Normality: Residuals are normally distributed with a mean of 0
-
-- Linear relationship between X and Y --\> check residual plot
-
-- Constant variance among residuals: Linear regression assumes the variance among error terms are constant (also called: homoscedasticity).
-
-check normality assumption by plotting the histogram of residuals and how much it resembles a normal distribution/
+Let's check the model fit. We will use AIC and Pseudo R-squared since a logistic regression doesn't have R-squared. Rule of thumb, a lower AIC is better and a McFadden's Pseudo R squared of between 0.2 - 0.4 is considered a good fit for logistic regression.
 
 ```{r}
-res0_df <- data.frame(res = as.numeric(model_0$residuals))
+# model fit: 
+AIC(model_0) # lower AIC is better
 
-# check normality assumption by plotting the histogram of residuals
-
-ggplot(data = res0_df, aes( x = res))+
-  geom_histogram(bins = 50, fill = "steelblue", color = "white")+
-  theme_minimal()+
-  labs( title = "Histogram of Residuals")+
-  geom_rug(color = "steelblue") # show the full breadth of the distribution
-
+# McFadden's Pseudo R-squared
+# Formula: 1 - (log-likelihood of full model / log-likelihood of null model)
+null_model <- multinom(Target ~ 1, data = training_data, maxit = 500)
+mcfadden_r2 <- 1 - (logLik(model_0) / logLik(null_model))
+cat("McFadden's Pseudo R²:", round(as.numeric(mcfadden_r2), 4), "\n") # print the pseudo R squared value
 ```
 
-We see a normal distribution.
+Our AIC is 3542.901, we will use this as the baseline once we start comparing with other models. Nevertheless, our McFadden R-squared is 0.46, on a scale of 0 to 1, this is a strong model considering an excellent model has values between 0.2 and 0.4.
 
-Let's check for normality assumption using Quantile-Quantile (QQ) plots: It’s good if residuals follow the straight dashed line.
-
-```{r}
-res0_df |>
-  ggplot(aes(sample = res))+
-  geom_qq(color = "steelblue")+
-  geom_qq_line(color = "orange")+
-  labs( title = "QQ Plot of Residuals vs the theoretical normal distribution")+
-  theme_minimal()
-
-```
-
-We see a huge variation from the diagonal line at the extremes, we could try data transformation (e.g., log transform the outcome data)
+Let's evaluate the model using a confusion matrix
 
 ```{r}
-model_1 <- lm(log(`Age at enrollment`)~., data = training_data)
-res1_df <- data.frame(res1 = as.numeric(model_1$residuals))
+# make predictions on the test data
+predicted_class <- predict(model_0, newdata = testing_data) 
 
-res1_df |>
-  ggplot(aes(sample = res1))+
-  geom_qq(color = "steelblue")+
-  geom_qq_line(color = "orange")+
-  labs( title = "QQ Plot of Residuals after log transformation")+
-  theme_minimal()
-
-```
-
-The variation is still evident with the data transformation; therefore normality assumption is violated.
-
-Residual Plot: Residuals vs Fitted visual -- check the linear relationship assumptions.
-
-```{r}
-# create a dataframe
-plot_data <- data.frame(
-  fitted = model_0$fitted.values,
-  residuals = model_0$residuals
-)
-
-# build the plot
-
-ggplot(plot_data, aes(x = fitted, y = residuals)) +
-  geom_point(alpha = 0.5, color = "steelblue") +   # the points     
-  geom_hline(yintercept = 0, # horizontal reference line
-             linetype = "dashed", 
-             color = "black") +
-  geom_smooth(method = "loess", # The trend line (similar to the red line in base plot)
-              formula = 'y ~ x',
-              color = "orange", 
-              se = FALSE) +
-  theme_minimal() +
-  labs(title = "Residuals vs Fitted Plot",
-       x = "Fitted Values",
-       y = "Residuals")
-```
-
-There is evidence of heteroscedasticity as the points are clustered around the left and fan out towards the right. This tells that there is a violation in the constant variance assumption of linearity.
-
-Let's try a transformed model using the logarithm
-
-```{r}
-# create a dataframe
-plot_data_1 <- data.frame(
-  fitted = model_1$fitted.values,
-  residuals = model_1$residuals
-)
-
-# build the plot
-
-ggplot(plot_data_1, aes(x = fitted, y = residuals)) +
-  geom_point(alpha = 0.5, color = "steelblue") +   # the points     
-  geom_hline(yintercept = 0, # horizontal reference line
-             linetype = "dashed", 
-             color = "black") +
-  geom_smooth(method = "loess", # The trend line (similar to the red line in base plot)
-              formula = 'y ~ x',
-              color = "orange", 
-              se = FALSE) +
-  theme_minimal() +
-  labs(title = "Residuals vs Fitted Plot after Log Transformation",
-       x = "Fitted Values",
-       y = "Residuals")
-```
-
-Even after log transformation, the relationship being linear assumption is violated
-
-```{r}
-## We will start here next time
-```
-
-Let's check for collinearity between the numerical independent variables
-
-To find a good model that shows this relationship between the dependent and independent variables, we will use the 'forward step wise' variable selection method to select predictor variables that will be good for our model.
-
-```{r}
-set.seed(123) # set a pseudorandom number generator
-index <- sample(1:nrow(pj_data), 0.3 * nrow(pj_data)) # sample 30% of the data for testing
-# split the data
-training_data <- pj_data[-index, ]
-testing_data <- pj_data[index, ]
-
-# perfom bestsubset variable selection method
-model.bestsubset <- regsubsets(`Age at enrollment` ~.,data = training_data, nvmax = 36) # nvmax = 36 because we have 36 independent variables
-summary(model.bestsubset)
-```
-
-```{r}
-# Let's examine one or more goodness of fit metrics to select the best overall model
-reg.summary <- summary(model.bestsubset)
-names(reg.summary)
-```
-
-Adjusted R-squared of all best performing model sizes
-
-```{r}
-reg.summary$adjr2
-which.max(reg.summary$adjr2)   # model with 27 independent variables performs the best when using adjusted r-squared as comparison metric
-plot(reg.summary$adjr2 , 
-     xlab = " Number of Variables ", 
-     pch=16,type = "b",
-     main = "Best Subset Selection Method",
-     ylab = " Adjusted R-squared", 
-     col="purple") 
-min(reg.summary$adjr2)
-max(reg.summary$adjr2) 
-```
-
-```{r}
-# Extract the coefficients for the best model
-coef(model.bestsubset,24)
+# confusion matrix
+conf_matrix <- confusionMatrix(predicted_class, testing_data$Target)
+conf_matrix
 ```
