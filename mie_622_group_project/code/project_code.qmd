@@ -7,7 +7,9 @@ editor: visual
 
 ## Predicting Students Dropout and Academic Success
 
-Research Question: What are the biggest contributors to student academic dropout and failure in higher education?
+### Research Question: What are the biggest contributors to student academic dropout and failure in higher education?
+
+#### Libraries
 
 ```{r}
 # set up the libraries
@@ -20,36 +22,49 @@ library(caret)
 library(nnet) # for multinomial logistic regression
 library(pROC) # for ROC curve
 library(car) # for stress-testing regression models
+library(rpart) # for regression trees
+library(rpart.plot) # for regression tree plot
+library(vip) # for feature importance
+library(randomForest)
+library(janitor) # to clean messy column names
+library(knitr) # to convert from qmd to r script
 ```
+
+### Data exploration
 
 ```{r}
 # load the data
-pj_data <- read_xlsx(here("data", "project_data.xlsx")) # the data file is in a folder named 'data'
+pj_data <- read_xlsx(here("data", "project_data.xlsx")) 
+# the data file is in a folder named 'data'
 head(pj_data)
 str(pj_data)
 summary(pj_data)
 ```
 
 ```{r}
+# clean messy column names
+pj_data <- clean_names(pj_data) 
+
 # remove any missing values
 pj_data <- na.omit(pj_data) 
 ```
 
 ```{r}
 # Factorize the categorical variables
-# 'Target' is the only categorical variable
-col <- c("Target")
+# 'target' is the only categorical variable
+col <- c("target")
 pj_data [, col] <- lapply(pj_data[, col], factor)
 str(pj_data) # confirm categorization of the column
-levels(pj_data$Target)
+levels(pj_data$target)
+table(pj_data$target)
 ```
 
-For our research question, "What are the biggest contributors to student academic dropout and failure in higher education?", we will take 'Target' as the dependent (Y) variable that we can predict using the other variables as the independent variables.
+For our research question, "What are the biggest contributors to student academic dropout and failure in higher education?", we will take 'target' as the dependent (Y) variable that we can predict using the other variables as the independent variables.
 
 ```{r}
 # Let's take a look at the distribution of our variable of interest
 pj_data |>
-  ggplot(aes(x =Target, fill = Target))+
+  ggplot(aes(x =target, fill = target))+
            geom_bar()+
   theme_minimal()+
   labs( title = "Distribution of Student Outcomes",
@@ -57,24 +72,38 @@ pj_data |>
         y = "Count")
 ```
 
+### Logistic Regression Model
+
 Let's develop a logistic regression model to predict student academic outcome.
 
-Since Target is a categorical variable (3 classes: Dropout, Graduate, Enrolled), we cannot use linear regression as it would require a continuous numeric outcome. Instead, we will use a logistic regression (mulitnomial).
+Since target is a categorical variable (3 classes: Dropout, Graduate, Enrolled), we cannot use linear regression as it would require a continuous numeric outcome. Instead, we will use a logistic regression (mulitnomial).
 
-Since the outcome (Y) is 'Target' what we want to predict; Let's split the data 70% training and 30% testing
+Also, for a multinomial logistic regression we need to identify the reference level in the dependent variable. Based on our research question, ' What contributes to dropout?', we will set 'Graduate' as the reference level in the 'target' variable.
+
+```{r}
+# set reference level
+pj_data$target <- relevel(pj_data$target, ref = "Graduate" )
+
+# confirm
+levels(pj_data$target)
+```
+
+Since the outcome (Y) is 'target' what we want to predict; Let's split the data 70% training and 30% testing
+
+#### Model training and testing
 
 ```{r}
 set.seed(123)  # setting a seed for reproducibility of the random split
-index <- createDataPartition(pj_data$`Target`, p = 0.3, list = FALSE)
+index <- createDataPartition(pj_data$`target`, p = 0.3, list = FALSE)
 training_data <- pj_data[-index, ]
 testing_data <- pj_data[index, ]
 ```
 
-Check summary statistics of the outcome "Target" in training and testing data
+Check summary statistics of the outcome "target" in training and testing data
 
 ```{r}
-summary(training_data$`Target`)
-summary(testing_data$`Target`)
+summary(training_data$`target`)
+summary(testing_data$`target`)
 ```
 
 Confirm sizes of the testing and training data
@@ -87,8 +116,8 @@ cat("Testing rows:", nrow(testing_data), "\n")
 Confirm class balance is preserved in both sets
 
 ```{r}
-prop.table(table(training_data$Target))
-prop.table(table(testing_data$Target))
+prop.table(table(training_data$target))
+prop.table(table(testing_data$target))
 ```
 
 Before building the model, let's check whether any of our independent variables are highly correlated with each other. If two variables are almost identical, it will confuse the model and inflate the standard errors.
@@ -96,18 +125,20 @@ Before building the model, let's check whether any of our independent variables 
 We will use the Variance Inflation Factor(VIF), whereby if vif = 1, we have no correlation at atll, VIF is 1- 5, we moderate correlation (fine), and VIF 5 - 10 we have a higher correlation.
 
 ```{r}
-# We first fit a temporary linear model just to extract VIF values - this is a common workaround since vif() requires a linear model object
-temp_model <- lm(as.numeric(Target) ~ ., data = training_data)
+# We first fit a temporary linear model just to extract VIF values - this 
+# is a common workaround since vif() requires a linear model object
+temp_model <- lm(as.numeric(target) ~ ., data = training_data)
 vif_values <- vif(temp_model) # get the vif values from the model
-vif_values[vif_values > 5] # show variables that have vif values greater than 5 (potential collinearity issue)
+vif_values[vif_values > 5] # show variables that have vif values greater 
+# than 5 (potential collinearity issue)
 ```
 
 We have 10 independent variables that have vif values above 5 where 6 of the variables have vif values above 10. For the variables with a vif above 10 we will remove one of them say 'Curricular units 1st sem (enrolled)'.
 
-We can now develop a logistic regression model to predict 'Target' using all other independent variables. Since Target has 3 categories (Dropout, Enrolled, Graduate), we will use multinomial logistic regression i.e., the model will pick one class as the reference/ baseline - by default this will be 'Dropout' as it's the category that comes first alphabetically.
+We can now develop a logistic regression model to predict 'target' using all other independent variables.
 
 ```{r}
-model_0 <- multinom(Target~., data = training_data, maxit = 500)
+model_0 <- multinom(target~., data = training_data, maxit = 500)
 # maxit = 500 gives the optimizer more iterations to converge
 summary(model_0)
 ```
@@ -120,12 +151,15 @@ AIC(model_0) # lower AIC is better
 
 # McFadden's Pseudo R-squared
 # Formula: 1 - (log-likelihood of full model / log-likelihood of null model)
-null_model <- multinom(Target ~ 1, data = training_data, maxit = 500)
+null_model <- multinom(target ~ 1, data = training_data, maxit = 500)
 mcfadden_r2 <- 1 - (logLik(model_0) / logLik(null_model))
-cat("McFadden's Pseudo R²:", round(as.numeric(mcfadden_r2), 4), "\n") # print the pseudo R squared value
+cat("McFadden's Pseudo R²:", round(as.numeric(mcfadden_r2), 4), "\n") # print
+# the pseudo R squared value
 ```
 
 Our AIC is 3542.901, we will use this as the baseline once we start comparing with other models. Nevertheless, our McFadden R-squared is 0.46, on a scale of 0 to 1, this is a strong model considering an excellent model has values between 0.2 and 0.4.
+
+#### Model Evaluation
 
 Let's evaluate the model using a confusion matrix
 
@@ -134,6 +168,318 @@ Let's evaluate the model using a confusion matrix
 predicted_class <- predict(model_0, newdata = testing_data) 
 
 # confusion matrix
-conf_matrix <- confusionMatrix(predicted_class, testing_data$Target)
+conf_matrix <- confusionMatrix(predicted_class, testing_data$target)
 conf_matrix
+```
+
+From the confusion matrix results we see that our model is able to correctly predict the outcome 77% of the time (accuracy) while catching each outcome positively in each class (sensitivity/ recall) as follows: 94% of the time in the Graduate Class, 78% of the time in the Dropout Class, and 27% of the time in the Enrolled class.
+
+To get our biggest contributors to student dropout, we will exponentiate the coefficients from the model to get the Relative Risk Ratios(RRR) - similar to odds ratios.
+
+- If RRR = 1.0 -\> no effect
+
+- if RRR \> 1.0 -\> that variable increases the probability of being in that class vs the reference class (Graduate)
+
+- if RRR \< 1.0 -\> that variable increases the probability of being in that class vs the reference class (Graduate)
+
+For example: if the RRR for "Curricular units 1st sem (approved)" in the Graduate vs. Dropout row is 1.8, it means a student who passes one more unit in the first semester is 1.8× more likely to dropout than to graduate.
+
+```{r}
+# Relative Risk Ratios: exp(coefficients)
+rrr <- exp(coef(model_0))
+rrr
+```
+
+#### Variable importance: Which predictors matter most?
+
+```{r}
+importance <- varImp(model_0)
+# rank the variables by importance
+importance_df <- importance |>
+  rownames_to_column(("Variable")) |>
+  arrange(desc(Overall))
+
+# view the variables df
+head(importance_df)
+
+# plot the variables
+importance_df |>
+  slice_head(n = 15) |>
+  ggplot(aes(x = reorder(Variable,Overall), y = Overall))+
+  geom_col(fill ="steelblue") +
+  coord_flip()+
+  theme_minimal()+
+  labs(title = "Top 15 Most Important Predictors of Student Outcome",
+       x = "Variable",
+       y = "Importance Score")
+
+```
+
+### Classification tree model: (using method= "class")
+
+```{r}
+# classification tree model
+model1 <- rpart(formula = target ~ .-target, 
+                data= training_data, 
+                method= "class")
+# plot the model
+rpart.plot(model1)
+head(training_data)
+```
+
+First value in each node = Predicted category (Low or High) Second value in each node = Proportion of non-baseline category of the outcome Third value in each node = Percent of data that falls in this node after the split (percent of data that follows this particular path in the tree)
+
+#### Model Evaluation: Model 1
+
+```{r}
+# make predictions on the test data
+predicted_class_1 <- predict(model1, newdata = testing_data) 
+
+testing_data$predicted_class_1 <- predict(model1, newdata = testing_data, 
+                                          type = "class")
+head(testing_data)
+
+# confusion matrix
+conf_matrix_1 <- confusionMatrix(testing_data$predicted_class_1, 
+                                 testing_data$target)
+conf_matrix_1
+
+```
+
+From the results, we see our model is 75% accurate in predicted which students will graduate! In addition, our kappa is 0.59 which is a moderate to substantial measure that our accuracy isn't just a fluke of having more 'Graduate' data points.
+
+Our Model's sensitivity is 89% for 'Graduate Category' which means 89% of the time, it positively identifies students who will graduate, and 76% of the time it will identify students who will drop out or at high risk of dropping out which is a solid detection rate. Nevertheless, the model struggles to capture students who fall in the 'Enrolled class' (37.2%) - this is most likely because the 'Enrolled Class' is a middle ground category, so its features overlap with both other categories.
+
+#### Variable importance Plot
+
+```{r}
+vip(model1)
+```
+
+### Regression tree.
+
+```{r}
+model2 <-rpart(formula = target ~ ., data = training_data, method = "anova")
+# we use 'anova' when developing a regression tree
+rpart.plot(model2)
+```
+
+#### Model Evaluation
+
+```{r}
+# make predictions on the test data
+predicted_class_2 <- predict(model2, newdata = testing_data)
+
+# Apply the model to testing data
+testing_data$predicted_class_2 <- predict(model2, newdata = testing_data, 
+                                          type = "vector")
+head(data.frame(testing_data$target, testing_data$predicted_class_2))
+
+# Convert both to numeric before calculating
+target_num <- as.numeric(as.character(testing_data$target))
+pred_num <- as.numeric(as.character(testing_data$predicted_class_2))
+
+# Calculate RSS
+rss <- sum((target_num - pred_num)^2)
+rss
+```
+
+#### Variable importance plot
+
+```{r}
+vip(model2)
+```
+
+#### Pruning:
+
+This is to help in visualizing cross validation error for different complexity parameter (cp) values
+
+```{r}
+plotcp(model2)
+```
+
+plotcp() illustrates the set of possible cost-complexity (cp) values on x-axis y-axis shows relative cross validation error for various penalty values (cp values) horizontal line is drawn 1 standard error above the minimum of the curve
+
+Each penalty term corresponds to a "size of tree" which is the number of terminal nodes Smaller penalty (cp values) --\> larger trees Larger penalty (cp values) --\> smaller trees A good choice of cp for pruning is often the leftmost value for which the mean lies below the horizontal line Here: cp = 0.022 tree size of 3 (terminal nodes) provides optimal cross validation
+
+Pruned model using cp = 0.055
+
+```{r}
+pruned1 <- rpart(formula = target ~ .,data= training_data, method  = "anova", 
+                 control = list(cp = 0.022, xval = 10)) 
+                  # xval = 10 is a common validation number
+rpart.plot(pruned1)
+```
+
+We can try a different cp-value such as 0.014 that has more trees (5)
+
+```{r}
+pruned2 <- rpart(formula = target ~ .,data= training_data, 
+                 method  = "anova",  
+                 control = list(cp = 0.014, 
+                                xval = 10)) # xval = 10 is a common validation number
+rpart.plot(pruned2)
+```
+
+### Pruning and Random Forests (RF)
+
+Recall: Arguments of randomForest() function
+
+- mtry = nr of variables to pick each time we build a regression tree
+
+- ntree = how many trees we want
+
+- maxnodes = how many nodes we want to keep
+
+- importance enables the algorithm to calculate variable importance
+
+#### RF model 1
+
+```{r}
+rf_model1 <- randomForest(target ~ ., data=training_data, 
+                          mtry = 8, importance=TRUE)
+
+# The default mtry for classification is the square root of the 
+# number of predictors. We have 36 predictors, therefore 9 would 
+# be a good value for mtry.
+
+rf_model1 
+```
+
+The high error rate for the **Enrolled** class (61.8%) stands out. While the model is great at identifying students who graduate, it is struggling significantly to distinguish between students who are still Enrolled and those who have Dropped out.
+
+Let's check how the Target class is balanced as any inbalance in the 'Target' categories could be causing this high error rate!
+
+```{r}
+table(training_data$target)
+```
+
+The table confirms a significant **class imbalance**: we have nearly three times as many Graduates as Enrolled students. The model is biased toward the "Graduate" class because it has the most observations (1,546). The "Enrolled" class is the smallest, leading the model to misclassify 224 Enrolled students as Graduates!
+
+Let's try a **Balanced Random Forest** by sampling an equal number of rows from each class when building the trees.
+
+```{r}
+# Let's set the sample size based on our smallest class (Enrolled = 555)
+# This forces the model to treat all classes with equal weight
+rf_model1_balanced <- randomForest(
+  target ~ ., 
+  data = training_data, 
+  mtry = 8, 
+  importance = TRUE,
+  sampsize = c("Graduate" = 555, "Dropout" = 555, "Enrolled" = 555)
+)
+
+print(rf_model1_balanced)
+```
+
+This is a much better balance! By downsampling, we cut the **Enrolled** error rate from **67% down to 44%**.
+
+While the overall out-of-bag (OOB) error rose slightly (from 22.8% to 24.5%), the model is now significantly more "honest" about the Enrolled class. It's no longer just defaulting to the majority labels.
+
+Looking at the confusion matrix:
+
+- **Enrolled vs. Graduate:** 187 Graduates were mistaken for Enrolled, and 150 Enrolled were mistaken for Graduates. These two classes are still bleeding into each other, likely because their academic data (grades/credits) looks very similar.
+
+- **The Trade-off:** The **Graduate** error doubled (from \~6% to 15%). This is the standard "price" of balancing; the model is no longer biased toward the majority, so it makes more mistakes there to get the minority class right.
+
+#### Model Evaluation
+
+```{r}
+# predict using the balanced random forest model
+predicted_class_3 <- predict(rf_model1_balanced, newdata = testing_data)
+
+# confusion matrix
+brf_cm <- confusionMatrix(predicted_class_3, testing_data$target)
+brf_cm
+```
+
+Our Enrolled sensitivity is now nearly 60% (59.8%) which means we are correctly identifying nearly 60% of the Enrolled Students. This is a massive jump from the 27% our logistic regression was catching. Our Kappa is 0.6448 in which a Kappa above 0.60 is generally considered a substantial agreement that our model's predictions are reliable and not just due to random chance or class size bias. Lastly, our Dropout class prediction is high 0.9457, meaning it is incredibly good at not falsely accusing a student of dropping out if they aren't actually doing so.
+
+Using the importance() function, we can view the importance of each importance() variable
+
+#### Variable Importance
+
+```{r}
+varImpPlot(rf_model1_balanced)
+importance(rf_model1_balanced)
+
+# variable importance plot
+vip(rf_model1_balanced)
+```
+
+1.  Looking at the variable importance plot and data, 'curricular_units_2nd_sem_approved' is the most important variable in predicting outcomes for our model. It has a massive Mean Decrease Gini of 134.2 and Mean Decrease Accuracy of 57.1, meaning it is the most critical variable in predicting whether a student graduates or drops out.
+
+    In addition, the top predictors are almost all related to the 2nd semester:
+
+    - curricular_units_2nd_sem_approved
+
+    - curricular_units_2nd_sem_grade
+
+    - curricular_units_1st_sem_approved
+
+      If a student is failing to get credits approved in the second semester, the model is very confident they will drop out.
+
+2.  Tuition is the most important non-academic variable. It has a high Dropout specific accuracy score (40.0), suggesting that being behind on fees is a huge red flag for immediate dropout.
+
+3.  The 'Enrolled' column in the importance table has much lower values than other classes columns. This explains why our 'Enrolled' error is still high! The model has great features of identifying student success (Graduate) or failure (Dropout) but the features aren't very good at identifying enrolled students i.e., the 'in-between'.
+
+4.  Variables such as 'international', 'educational_special_needs', and 'application_order' have near zero importance. They are adding noise to our random forest.
+
+Recap: When running the variable importance under our logistic regression model, the variable 'international' came up as the most important variable for predicting the outcome. However, we have seen with the random forest model that this variable 'international' only adds noise to the model! This is because of two things: non linear relationships and the importance scale.
+
+- Nonlinear vs Linear: Logistic regression looks for a straight line relationship. Therefore, if being an international student has a consistent, small impact across the board, then the regression model might flag it as highly significant. However, the Random Forest, looks for 'splits'. If 'curricular_units_2nd_sem_approved' is a much more powerful way to divide the data into groups, the Random Forest will prioritize it and ignore 'weaker' signals like 'international'.
+
+- Importance Scale: In our variable importance plot in the logistic regression, our scale of importance only goes up to 4 whereas in the Random Forest, the Gini importance for academic units went up to 134. This suggests that while 'international' is statistically significant in a regression, its actual predictive power is tiny compared to grades and credits!
+
+### Conclusion
+
+Looking at the models above: Multinomial logistic regression, Classification tree, Regression tree, and Random Forest, there is a general theme of variables with 'grades' and 'credits' having more predictive power in determining whether a student will graduate.
+
+Looking at the model results, Multinomial logistic regression has the highest overall accuracy (76.9%) of all the models, but it also the worst at identfying the 'Enrolled' group (Enrolled sensitivity: 27.6%). The logistic regression is very good at chasing the accuracy by being extremely good at predicting the majority class (Graduate Sensitivity: 93.6%) while ignoring the minority sensitivity (Enrolled Sensitivity: 27.6%).
+
+Essentially, our logistic model is biased. It only correctly identified 66 enrolled students and misclassifies 103 enrolled students as Graduates. If we used this in a school, we would miss nearly 73% of the students who are currently 'stuck' in enrollment and might need help.
+
+Looking at the balanced accuracy tells the truth: The balanced accuracy for the Enrolled class in the logistic model is 60.6%, which is lower than the Classification tree model (64.4%) and much lower than that of our Balanced Random Forest (73.7%). Therefore, the Balanced Random Forest is much better as it has a higher accuracy for the minority class across the different models.
+
+The balanced Random Forest is our most fair and useful model as it provides the best 'safety net' for the Enrolled students without sacrificing too much performance on Graduates and Dropouts. The logistic regression remains the most accurate overall.
+
+#### Model Comparison
+
+```{r}
+# Let's create a data frame with the Sensitivity scores we've gathered
+comparison_data <- data.frame(
+  Model = c("Multinomial Logistic", "Classification Tree", 
+            "Balanced Random Forest"),
+  Graduate = c(0.937, 0.890, 0.847),
+  Dropout = c(0.785, 0.759, 0.730),
+  Enrolled = c(0.276, 0.372, 0.544) # RF scores from the balanced OOB
+)
+
+# Reshape for plotting
+plot_data <- pivot_longer(comparison_data, 
+                          cols = c("Graduate", "Dropout", "Enrolled"), 
+                          names_to = "Class", 
+                          values_to = "Sensitivity")
+
+# Generate a comparison plot
+ggplot(plot_data, aes(x = Class, y = Sensitivity, fill = Model)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "Model Comparison: Sensitivity by Student Outcome",
+       subtitle = "The Balanced Random Forest is the only model that 
+       effectively 'catches' Enrolled students",
+       y = "Sensitivity (Recall)",
+       x = "Student Status") +
+  scale_fill_brewer(palette = "Set1") +
+  geom_text(aes(label = round(Sensitivity, 2)), 
+            position = position_dodge(width = 0.9), 
+            vjust = -0.5, 
+            size = 3)
+
+```
+
+### Convert to R script
+
+```{r}
+purl("project_code.qmd")
 ```
