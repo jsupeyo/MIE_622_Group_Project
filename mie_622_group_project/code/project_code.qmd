@@ -50,6 +50,10 @@ pj_data <- na.omit(pj_data)
 ```
 
 ```{r}
+colnames(pj_data)
+```
+
+```{r}
 # Factorize the categorical variables
 # 'target' is the only categorical variable
 col <- c("target")
@@ -131,6 +135,29 @@ temp_model <- lm(as.numeric(target) ~ ., data = training_data)
 vif_values <- vif(temp_model) # get the vif values from the model
 vif_values[vif_values > 5] # show variables that have vif values greater 
 # than 5 (potential collinearity issue)
+
+# remove the flagged variables from both training and testing data sets
+training_data <- training_data |> select (-c("mothers_occupation", 
+                                             "fathers_occupation",
+                                             "curricular_units_1st_sem_credited",
+                                             "curricular_units_1st_sem_enrolled",
+                                             "curricular_units_1st_sem_approved",
+                                             "curricular_units_1st_sem_grade",
+                                             "curricular_units_2nd_sem_credited",
+                                             "curricular_units_2nd_sem_enrolled",
+                                             "curricular_units_2nd_sem_approved",
+                                             "curricular_units_2nd_sem_grade"
+                                             ))
+testing_data <- testing_data |> select(-c("mothers_occupation", 
+                                             "fathers_occupation",
+                                             "curricular_units_1st_sem_credited",
+                                             "curricular_units_1st_sem_enrolled",
+                                             "curricular_units_1st_sem_approved",
+                                             "curricular_units_1st_sem_grade",
+                                             "curricular_units_2nd_sem_credited",
+                                             "curricular_units_2nd_sem_enrolled",
+                                             "curricular_units_2nd_sem_approved",
+                                             "curricular_units_2nd_sem_grade"))
 ```
 
 We have 10 independent variables that have vif values above 5 where 6 of the variables have vif values above 10. For the variables with a vif above 10 we will remove one of them say 'Curricular units 1st sem (enrolled)'.
@@ -253,7 +280,9 @@ Our Model's sensitivity is 89% for 'Graduate Category' which means 89% of the ti
 #### Variable importance Plot
 
 ```{r}
-vip(model1)
+vip(model1)+
+  geom_col(fill="steelblue")+
+  theme_minimal()
 ```
 
 ### Regression tree.
@@ -287,7 +316,9 @@ rss
 #### Variable importance plot
 
 ```{r}
-vip(model2)
+vip(model2)+
+  geom_col(fill = "steelblue")+
+  theme_minimal()
 ```
 
 #### Pruning:
@@ -404,7 +435,8 @@ varImpPlot(rf_model1_balanced)
 importance(rf_model1_balanced)
 
 # variable importance plot
-vip(rf_model1_balanced)
+vip(rf_model1_balanced)+
+  geom_col(fill = "steelblue")
 ```
 
 1.  Looking at the variable importance plot and data, 'curricular_units_2nd_sem_approved' is the most important variable in predicting outcomes for our model. It has a massive Mean Decrease Gini of 134.2 and Mean Decrease Accuracy of 57.1, meaning it is the most critical variable in predicting whether a student graduates or drops out.

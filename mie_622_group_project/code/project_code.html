@@ -393,11 +393,53 @@ The following objects are masked from 'package:stats':
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>pj_data <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(pj_data) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Factorize the categorical variables</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 'target' is the only categorical variable</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>col <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"target"</span>)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>pj_data [, col] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pj_data[, col], factor)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(pj_data) <span class="co"># confirm categorization of the column</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pj_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "marital_status"                              
+ [2] "application_mode"                            
+ [3] "application_order"                           
+ [4] "course"                                      
+ [5] "daytime_evening_attendance"                  
+ [6] "previous_qualification"                      
+ [7] "previous_qualification_grade"                
+ [8] "nacionality"                                 
+ [9] "mothers_qualification"                       
+[10] "fathers_qualification"                       
+[11] "mothers_occupation"                          
+[12] "fathers_occupation"                          
+[13] "admission_grade"                             
+[14] "displaced"                                   
+[15] "educational_special_needs"                   
+[16] "debtor"                                      
+[17] "tuition_fees_up_to_date"                     
+[18] "gender"                                      
+[19] "scholarship_holder"                          
+[20] "age_at_enrollment"                           
+[21] "international"                               
+[22] "curricular_units_1st_sem_credited"           
+[23] "curricular_units_1st_sem_enrolled"           
+[24] "curricular_units_1st_sem_evaluations"        
+[25] "curricular_units_1st_sem_approved"           
+[26] "curricular_units_1st_sem_grade"              
+[27] "curricular_units_1st_sem_without_evaluations"
+[28] "curricular_units_2nd_sem_credited"           
+[29] "curricular_units_2nd_sem_enrolled"           
+[30] "curricular_units_2nd_sem_evaluations"        
+[31] "curricular_units_2nd_sem_approved"           
+[32] "curricular_units_2nd_sem_grade"              
+[33] "curricular_units_2nd_sem_without_evaluations"
+[34] "unemployment_rate"                           
+[35] "inflation_rate"                              
+[36] "gdp"                                         
+[37] "target"                                      </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Factorize the categorical variables</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 'target' is the only categorical variable</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>col <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"target"</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>pj_data [, col] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pj_data[, col], factor)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(pj_data) <span class="co"># confirm categorization of the column</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [4,424 × 37] (S3: tbl_df/tbl/data.frame)
  $ marital_status                              : num [1:4424] 1 1 1 1 2 2 1 1 1 1 ...
@@ -438,11 +480,11 @@ The following objects are masked from 'package:stats':
  $ gdp                                         : num [1:4424] 1.74 0.79 1.74 -3.12 0.79 -0.92 -4.06 -4.06 -0.92 3.51 ...
  $ target                                      : Factor w/ 3 levels "Dropout","Enrolled",..: 1 3 1 3 3 3 3 1 3 1 ...</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(pj_data<span class="sc">$</span>target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(pj_data<span class="sc">$</span>target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Dropout"  "Enrolled" "Graduate"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(pj_data<span class="sc">$</span>target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(pj_data<span class="sc">$</span>target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Dropout Enrolled Graduate 
@@ -451,18 +493,18 @@ The following objects are masked from 'package:stats':
 </div>
 <p>For our research question, “What are the biggest contributors to student academic dropout and failure in higher education?”, we will take ‘target’ as the dependent (Y) variable that we can predict using the other variables as the independent variables.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's take a look at the distribution of our variable of interest</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>pj_data <span class="sc">|&gt;</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span>target, <span class="at">fill =</span> target))<span class="sc">+</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_bar</span>()<span class="sc">+</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">title =</span> <span class="st">"Distribution of Student Outcomes"</span>,</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Outcome"</span>,</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Count"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's take a look at the distribution of our variable of interest</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>pj_data <span class="sc">|&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span>target, <span class="at">fill =</span> target))<span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_bar</span>()<span class="sc">+</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">title =</span> <span class="st">"Distribution of Student Outcomes"</span>,</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Outcome"</span>,</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Count"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="project_code_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_code_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -474,11 +516,11 @@ The following objects are masked from 'package:stats':
 <p>Since target is a categorical variable (3 classes: Dropout, Graduate, Enrolled), we cannot use linear regression as it would require a continuous numeric outcome. Instead, we will use a logistic regression (mulitnomial).</p>
 <p>Also, for a multinomial logistic regression we need to identify the reference level in the dependent variable. Based on our research question, ’ What contributes to dropout?‘, we will set ’Graduate’ as the reference level in the ‘target’ variable.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set reference level</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>pj_data<span class="sc">$</span>target <span class="ot">&lt;-</span> <span class="fu">relevel</span>(pj_data<span class="sc">$</span>target, <span class="at">ref =</span> <span class="st">"Graduate"</span> )</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># confirm</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(pj_data<span class="sc">$</span>target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set reference level</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>pj_data<span class="sc">$</span>target <span class="ot">&lt;-</span> <span class="fu">relevel</span>(pj_data<span class="sc">$</span>target, <span class="at">ref =</span> <span class="st">"Graduate"</span> )</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># confirm</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(pj_data<span class="sc">$</span>target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Graduate" "Dropout"  "Enrolled"</code></pre>
 </div>
@@ -487,19 +529,19 @@ The following objects are masked from 'package:stats':
 <section id="model-training-and-testing" class="level4">
 <h4 class="anchored" data-anchor-id="model-training-and-testing">Model training and testing</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)  <span class="co"># setting a seed for reproducibility of the random split</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(pj_data<span class="sc">$</span><span class="st">`</span><span class="at">target</span><span class="st">`</span>, <span class="at">p =</span> <span class="fl">0.3</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>training_data <span class="ot">&lt;-</span> pj_data[<span class="sc">-</span>index, ]</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>testing_data <span class="ot">&lt;-</span> pj_data[index, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)  <span class="co"># setting a seed for reproducibility of the random split</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(pj_data<span class="sc">$</span><span class="st">`</span><span class="at">target</span><span class="st">`</span>, <span class="at">p =</span> <span class="fl">0.3</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>training_data <span class="ot">&lt;-</span> pj_data[<span class="sc">-</span>index, ]</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>testing_data <span class="ot">&lt;-</span> pj_data[index, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Check summary statistics of the outcome “target” in training and testing data</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(training_data<span class="sc">$</span><span class="st">`</span><span class="at">target</span><span class="st">`</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(training_data<span class="sc">$</span><span class="st">`</span><span class="at">target</span><span class="st">`</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Graduate  Dropout Enrolled 
     1546      994      555 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(testing_data<span class="sc">$</span><span class="st">`</span><span class="at">target</span><span class="st">`</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(testing_data<span class="sc">$</span><span class="st">`</span><span class="at">target</span><span class="st">`</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Graduate  Dropout Enrolled 
      663      427      239 </code></pre>
@@ -507,24 +549,24 @@ The following objects are masked from 'package:stats':
 </div>
 <p>Confirm sizes of the testing and training data</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Training rows:"</span>, <span class="fu">nrow</span>(training_data), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Training rows:"</span>, <span class="fu">nrow</span>(training_data), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Training rows: 3095 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Testing rows:"</span>, <span class="fu">nrow</span>(testing_data), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Testing rows:"</span>, <span class="fu">nrow</span>(testing_data), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Testing rows: 1329 </code></pre>
 </div>
 </div>
 <p>Confirm class balance is preserved in both sets</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(training_data<span class="sc">$</span>target))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(training_data<span class="sc">$</span>target))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Graduate   Dropout  Enrolled 
 0.4995153 0.3211632 0.1793215 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(testing_data<span class="sc">$</span>target))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(testing_data<span class="sc">$</span>target))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Graduate   Dropout  Enrolled 
@@ -534,11 +576,11 @@ The following objects are masked from 'package:stats':
 <p>Before building the model, let’s check whether any of our independent variables are highly correlated with each other. If two variables are almost identical, it will confuse the model and inflate the standard errors.</p>
 <p>We will use the Variance Inflation Factor(VIF), whereby if vif = 1, we have no correlation at atll, VIF is 1- 5, we moderate correlation (fine), and VIF 5 - 10 we have a higher correlation.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We first fit a temporary linear model just to extract VIF values - this </span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># is a common workaround since vif() requires a linear model object</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>temp_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.numeric</span>(target) <span class="sc">~</span> ., <span class="at">data =</span> training_data)</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>vif_values <span class="ot">&lt;-</span> <span class="fu">vif</span>(temp_model) <span class="co"># get the vif values from the model</span></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>vif_values[vif_values <span class="sc">&gt;</span> <span class="dv">5</span>] <span class="co"># show variables that have vif values greater </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We first fit a temporary linear model just to extract VIF values - this </span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co"># is a common workaround since vif() requires a linear model object</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>temp_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.numeric</span>(target) <span class="sc">~</span> ., <span class="at">data =</span> training_data)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>vif_values <span class="ot">&lt;-</span> <span class="fu">vif</span>(temp_model) <span class="co"># get the vif values from the model</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>vif_values[vif_values <span class="sc">&gt;</span> <span class="dv">5</span>] <span class="co"># show variables that have vif values greater </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               mothers_occupation                fathers_occupation 
                          6.105885                          6.098823 
@@ -551,152 +593,149 @@ curricular_units_2nd_sem_credited curricular_units_2nd_sem_enrolled
 curricular_units_2nd_sem_approved    curricular_units_2nd_sem_grade 
                         10.450321                          5.746380 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># than 5 (potential collinearity issue)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># than 5 (potential collinearity issue)</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co"># remove the flagged variables from both training and testing data sets</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>training_data <span class="ot">&lt;-</span> training_data <span class="sc">|&gt;</span> <span class="fu">select</span> (<span class="sc">-</span><span class="fu">c</span>(<span class="st">"mothers_occupation"</span>, </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"fathers_occupation"</span>,</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_1st_sem_credited"</span>,</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_1st_sem_enrolled"</span>,</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_1st_sem_approved"</span>,</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_1st_sem_grade"</span>,</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_2nd_sem_credited"</span>,</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_2nd_sem_enrolled"</span>,</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_2nd_sem_approved"</span>,</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_2nd_sem_grade"</span></span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>                                             ))</span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>testing_data <span class="ot">&lt;-</span> testing_data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="st">"mothers_occupation"</span>, </span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"fathers_occupation"</span>,</span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_1st_sem_credited"</span>,</span>
+<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_1st_sem_enrolled"</span>,</span>
+<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_1st_sem_approved"</span>,</span>
+<span id="cb51-20"><a href="#cb51-20" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_1st_sem_grade"</span>,</span>
+<span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_2nd_sem_credited"</span>,</span>
+<span id="cb51-22"><a href="#cb51-22" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_2nd_sem_enrolled"</span>,</span>
+<span id="cb51-23"><a href="#cb51-23" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_2nd_sem_approved"</span>,</span>
+<span id="cb51-24"><a href="#cb51-24" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"curricular_units_2nd_sem_grade"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We have 10 independent variables that have vif values above 5 where 6 of the variables have vif values above 10. For the variables with a vif above 10 we will remove one of them say ‘Curricular units 1st sem (enrolled)’.</p>
 <p>We can now develop a logistic regression model to predict ‘target’ using all other independent variables.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>model_0 <span class="ot">&lt;-</span> <span class="fu">multinom</span>(target<span class="sc">~</span>., <span class="at">data =</span> training_data, <span class="at">maxit =</span> <span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>model_0 <span class="ot">&lt;-</span> <span class="fu">multinom</span>(target<span class="sc">~</span>., <span class="at">data =</span> training_data, <span class="at">maxit =</span> <span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># weights:  114 (74 variable)
+<pre><code># weights:  84 (54 variable)
 initial  value 3400.205033 
-iter  10 value 2480.572817
-iter  20 value 2191.986421
-iter  30 value 2129.410219
-iter  40 value 2085.510606
-iter  50 value 1924.574517
-iter  60 value 1810.237731
-iter  70 value 1772.312144
-iter  80 value 1734.046001
-final  value 1733.747099 
+iter  10 value 3000.768642
+iter  20 value 2802.286112
+iter  30 value 2734.939167
+iter  40 value 2615.957680
+iter  50 value 2537.109560
+iter  60 value 2529.303157
+final  value 2529.302441 
 converged</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># maxit = 500 gives the optimizer more iterations to converge</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># maxit = 500 gives the optimizer more iterations to converge</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 multinom(formula = target ~ ., data = training_data, maxit = 500)
 
 Coefficients:
          (Intercept) marital_status application_mode application_order
-Dropout     1.917898     -0.1810365      0.003505177      -0.006431613
-Enrolled    3.324397     -0.1606087      0.007760222      -0.036311907
-               course daytime_evening_attendance previous_qualification
-Dropout  1.930579e-04                 -0.1637156            -0.02168748
-Enrolled 8.396514e-05                 -0.3886381            -0.01055563
+Dropout     5.137058    -0.18948879       0.01673088       -0.04807452
+Enrolled    5.322118    -0.06287304       0.01451813       -0.08301549
+                course daytime_evening_attendance previous_qualification
+Dropout  -5.564559e-06                  0.1892760           -0.005164888
+Enrolled -5.248100e-05                 -0.1163207           -0.001681942
          previous_qualification_grade nacionality mothers_qualification
-Dropout                 -0.0009660275  0.05134859           0.013128802
-Enrolled                -0.0075825048  0.03233004          -0.008519563
-         fathers_qualification mothers_occupation fathers_occupation
-Dropout           -0.012682665       -0.014937853        0.007519241
-Enrolled          -0.003302229       -0.002099212        0.005090628
-         admission_grade  displaced educational_special_needs    debtor
-Dropout     -0.007437684  0.2494837                 0.2967465 0.9125002
-Enrolled    -0.008451792 -0.1320225                 0.3074574 0.7371627
-         tuition_fees_up_to_date    gender scholarship_holder age_at_enrollment
-Dropout               -2.7559781 0.3926151         -0.7578893       0.057306920
-Enrolled              -0.8970247 0.2628348         -0.6131398      -0.004901788
-         international curricular_units_1st_sem_credited
-Dropout      -2.525323                         0.2250956
-Enrolled     -1.311196                         0.1547944
-         curricular_units_1st_sem_enrolled curricular_units_1st_sem_evaluations
-Dropout                          0.1726009                           0.02090501
-Enrolled                         0.2469308                           0.03905444
-         curricular_units_1st_sem_approved curricular_units_1st_sem_grade
-Dropout                         -0.6658218                     0.08015445
-Enrolled                        -0.5950873                     0.03997361
+Dropout                 -0.0004692721  0.04637844           0.010154029
+Enrolled                -0.0074324470  0.03589840          -0.007356896
+         fathers_qualification admission_grade   displaced
+Dropout           -0.004926895     -0.02558133  0.06526503
+Enrolled           0.001600888     -0.02110246 -0.15181056
+         educational_special_needs    debtor tuition_fees_up_to_date    gender
+Dropout                  0.6602887 0.9644238              -2.9642153 0.7316987
+Enrolled                 0.6676268 0.7986037              -0.9784967 0.4757287
+         scholarship_holder age_at_enrollment international
+Dropout          -1.4076816        0.04087893     -2.275794
+Enrolled         -0.9104734       -0.02855954     -1.238454
+         curricular_units_1st_sem_evaluations
+Dropout                           -0.03523424
+Enrolled                          -0.04412875
          curricular_units_1st_sem_without_evaluations
-Dropout                                    0.01573663
-Enrolled                                   0.11852348
-         curricular_units_2nd_sem_credited curricular_units_2nd_sem_enrolled
-Dropout                          0.1056607                         1.0398704
-Enrolled                        -0.1768551                         0.6788721
-         curricular_units_2nd_sem_evaluations curricular_units_2nd_sem_approved
-Dropout                           -0.01092911                         -1.111536
-Enrolled                           0.10210436                         -0.728232
-         curricular_units_2nd_sem_grade
-Dropout                      -0.2133744
-Enrolled                     -0.1223298
+Dropout                                     0.2248997
+Enrolled                                    0.1815964
+         curricular_units_2nd_sem_evaluations
+Dropout                           -0.07322174
+Enrolled                           0.09843252
          curricular_units_2nd_sem_without_evaluations unemployment_rate
-Dropout                                    -0.2934693        0.06687186
-Enrolled                                   -0.1891331       -0.01422570
+Dropout                                     0.1910010       -0.01435919
+Enrolled                                    0.1179735       -0.08004705
          inflation_rate         gdp
-Dropout    -0.006756518 0.034806852
-Enrolled   -0.028454692 0.008399693
+Dropout      0.04600240 -0.03667589
+Enrolled     0.01965228 -0.04984119
 
 Std. Errors:
           (Intercept) marital_status application_mode application_order
-Dropout  0.0005016679    0.001106431      0.005097792        0.02096655
-Enrolled 0.0005807538    0.001183869      0.004645550        0.02960864
+Dropout  0.0004828895   0.0005354772      0.003601031        0.02543392
+Enrolled 0.0004309095   0.0005455296      0.003833474        0.02225311
                course daytime_evening_attendance previous_qualification
-Dropout  4.563925e-05                0.001089283            0.007655451
-Enrolled 4.477392e-05                0.001186284            0.006960844
+Dropout  2.303008e-05               0.0008928019            0.005428889
+Enrolled 2.534151e-05               0.0008198257            0.005706393
          previous_qualification_grade nacionality mothers_qualification
-Dropout                   0.005427351 0.008346200           0.005427038
-Enrolled                  0.005190506 0.008047083           0.004745697
-         fathers_qualification mothers_occupation fathers_occupation
-Dropout            0.005373068        0.006754781        0.007004332
-Enrolled           0.004696565        0.005585706        0.005794529
-         admission_grade   displaced educational_special_needs       debtor
-Dropout      0.005473189 0.002401801              8.557609e-05 0.0005942123
-Enrolled     0.005213729 0.003613711              1.108375e-04 0.0006805457
-         tuition_fees_up_to_date      gender scholarship_holder
-Dropout             0.0009452609 0.001313137       0.0009982856
-Enrolled            0.0008704389 0.001456974       0.0011905723
-         age_at_enrollment international curricular_units_1st_sem_credited
-Dropout          0.0106253  0.0001577633                        0.01560799
-Enrolled         0.0109077  0.0001917920                        0.01752280
-         curricular_units_1st_sem_enrolled curricular_units_1st_sem_evaluations
-Dropout                        0.007398767                           0.01722184
-Enrolled                       0.010142627                           0.01732993
-         curricular_units_1st_sem_approved curricular_units_1st_sem_grade
-Dropout                         0.01179642                     0.01691846
-Enrolled                        0.01145982                     0.01711831
+Dropout                   0.003983712 0.007156908           0.003909275
+Enrolled                  0.004602799 0.007210251           0.004090152
+         fathers_qualification admission_grade   displaced
+Dropout            0.003879168     0.003949338 0.003010631
+Enrolled           0.004016378     0.004566968 0.002699465
+         educational_special_needs       debtor tuition_fees_up_to_date
+Dropout               7.538580e-05 0.0004514009            0.0006373246
+Enrolled              9.769289e-05 0.0004388049            0.0005277862
+               gender scholarship_holder age_at_enrollment international
+Dropout  0.0002663960       0.0004206124       0.007586402  0.0001256417
+Enrolled 0.0002951414       0.0005748088       0.009633589  0.0001359228
+         curricular_units_1st_sem_evaluations
+Dropout                            0.01946055
+Enrolled                           0.01981801
          curricular_units_1st_sem_without_evaluations
-Dropout                                   0.003105493
-Enrolled                                  0.003459499
-         curricular_units_2nd_sem_credited curricular_units_2nd_sem_enrolled
-Dropout                         0.01158525                       0.005819584
-Enrolled                        0.01178833                       0.008344842
-         curricular_units_2nd_sem_evaluations curricular_units_2nd_sem_approved
-Dropout                            0.02017460                        0.01968825
-Enrolled                           0.02020697                        0.02127533
-         curricular_units_2nd_sem_grade
-Dropout                      0.01645879
-Enrolled                     0.01666151
+Dropout                                   0.002305389
+Enrolled                                  0.002654343
+         curricular_units_2nd_sem_evaluations
+Dropout                            0.02089627
+Enrolled                           0.02077930
          curricular_units_2nd_sem_without_evaluations unemployment_rate
-Dropout                                   0.003501453        0.02345470
-Enrolled                                  0.003730044        0.02160893
+Dropout                                   0.001589183        0.01848369
+Enrolled                                  0.001364624        0.02000591
          inflation_rate        gdp
-Dropout      0.02052494 0.02297779
-Enrolled     0.02537849 0.02229610
+Dropout      0.02268175 0.02327103
+Enrolled     0.01921627 0.02426247
 
-Residual Deviance: 3467.494 
-AIC: 3615.494 </code></pre>
+Residual Deviance: 5058.605 
+AIC: 5166.605 </code></pre>
 </div>
 </div>
 <p>Let’s check the model fit. We will use AIC and Pseudo R-squared since a logistic regression doesn’t have R-squared. Rule of thumb, a lower AIC is better and a McFadden’s Pseudo R squared of between 0.2 - 0.4 is considered a good fit for logistic regression.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model fit: </span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(model_0) <span class="co"># lower AIC is better</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model fit: </span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(model_0) <span class="co"># lower AIC is better</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3615.494</code></pre>
+<pre><code>[1] 5166.605</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># McFadden's Pseudo R-squared</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Formula: 1 - (log-likelihood of full model / log-likelihood of null model)</span></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>null_model <span class="ot">&lt;-</span> <span class="fu">multinom</span>(target <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> training_data, <span class="at">maxit =</span> <span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># McFadden's Pseudo R-squared</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Formula: 1 - (log-likelihood of full model / log-likelihood of null model)</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>null_model <span class="ot">&lt;-</span> <span class="fu">multinom</span>(target <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> training_data, <span class="at">maxit =</span> <span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># weights:  6 (2 variable)
 initial  value 3400.205033 
 final  value 3155.905121 
 converged</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>mcfadden_r2 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (<span class="fu">logLik</span>(model_0) <span class="sc">/</span> <span class="fu">logLik</span>(null_model))</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"McFadden's Pseudo R²:"</span>, <span class="fu">round</span>(<span class="fu">as.numeric</span>(mcfadden_r2), <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>) <span class="co"># print</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>mcfadden_r2 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (<span class="fu">logLik</span>(model_0) <span class="sc">/</span> <span class="fu">logLik</span>(null_model))</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"McFadden's Pseudo R²:"</span>, <span class="fu">round</span>(<span class="fu">as.numeric</span>(mcfadden_r2), <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>) <span class="co"># print</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>McFadden's Pseudo R²: 0.4506 </code></pre>
+<pre><code>McFadden's Pseudo R²: 0.1985 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the pseudo R squared value</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the pseudo R squared value</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Our AIC is 3542.901, we will use this as the baseline once we start comparing with other models. Nevertheless, our McFadden R-squared is 0.46, on a scale of 0 to 1, this is a strong model considering an excellent model has values between 0.2 and 0.4.</p>
 </section>
@@ -704,43 +743,43 @@ converged</code></pre>
 <h4 class="anchored" data-anchor-id="model-evaluation">Model Evaluation</h4>
 <p>Let’s evaluate the model using a confusion matrix</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make predictions on the test data</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>predicted_class <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_0, <span class="at">newdata =</span> testing_data) </span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>conf_matrix <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(predicted_class, testing_data<span class="sc">$</span>target)</span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>conf_matrix</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make predictions on the test data</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>predicted_class <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_0, <span class="at">newdata =</span> testing_data) </span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>conf_matrix <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(predicted_class, testing_data<span class="sc">$</span>target)</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>conf_matrix</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
           Reference
 Prediction Graduate Dropout Enrolled
-  Graduate      621      49      103
-  Dropout        16     335       70
-  Enrolled       26      43       66
+  Graduate      576     160      173
+  Dropout        64     250       52
+  Enrolled       23      17       14
 
 Overall Statistics
-                                          
-               Accuracy : 0.769           
-                 95% CI : (0.7454, 0.7914)
-    No Information Rate : 0.4989          
-    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-                                          
-                  Kappa : 0.6083          
-                                          
- Mcnemar's Test P-Value : 6.438e-15       
+                                         
+               Accuracy : 0.6321         
+                 95% CI : (0.6055, 0.658)
+    No Information Rate : 0.4989         
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16      
+                                         
+                  Kappa : 0.3464         
+                                         
+ Mcnemar's Test P-Value : &lt; 2.2e-16      
 
 Statistics by Class:
 
                      Class: Graduate Class: Dropout Class: Enrolled
-Sensitivity                   0.9367         0.7845         0.27615
-Specificity                   0.7718         0.9047         0.93670
-Pos Pred Value                0.8034         0.7957         0.48889
-Neg Pred Value                0.9245         0.8987         0.85511
+Sensitivity                   0.8688         0.5855         0.05858
+Specificity                   0.5000         0.8714         0.96330
+Pos Pred Value                0.6337         0.6831         0.25926
+Neg Pred Value                0.7929         0.8162         0.82353
 Prevalence                    0.4989         0.3213         0.17983
-Detection Rate                0.4673         0.2521         0.04966
-Detection Prevalence          0.5816         0.3168         0.10158
-Balanced Accuracy             0.8542         0.8446         0.60642</code></pre>
+Detection Rate                0.4334         0.1881         0.01053
+Detection Prevalence          0.6840         0.2754         0.04063
+Balanced Accuracy             0.6844         0.7284         0.51094</code></pre>
 </div>
 </div>
 <p>From the confusion matrix results we see that our model is able to correctly predict the outcome 77% of the time (accuracy) while catching each outcome positively in each class (sensitivity/ recall) as follows: 94% of the time in the Graduate Class, 78% of the time in the Dropout Class, and 27% of the time in the Enrolled class.</p>
@@ -752,92 +791,80 @@ Balanced Accuracy             0.8542         0.8446         0.60642</code></pre>
 </ul>
 <p>For example: if the RRR for “Curricular units 1st sem (approved)” in the Graduate vs.&nbsp;Dropout row is 1.8, it means a student who passes one more unit in the first semester is 1.8× more likely to dropout than to graduate.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Relative Risk Ratios: exp(coefficients)</span></span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>rrr <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model_0))</span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>rrr</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Relative Risk Ratios: exp(coefficients)</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>rrr <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model_0))</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>rrr</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>         (Intercept) marital_status application_mode application_order   course
-Dropout     6.806639      0.8344049         1.003511         0.9935890 1.000193
-Enrolled   27.782235      0.8516252         1.007790         0.9643395 1.000084
-         daytime_evening_attendance previous_qualification
-Dropout                   0.8489835              0.9785460
-Enrolled                  0.6779796              0.9894999
+<pre><code>         (Intercept) marital_status application_mode application_order
+Dropout     170.2142      0.8273820         1.016872         0.9530628
+Enrolled    204.8171      0.9390627         1.014624         0.9203369
+            course daytime_evening_attendance previous_qualification
+Dropout  0.9999944                  1.2083744              0.9948484
+Enrolled 0.9999475                  0.8901897              0.9983195
          previous_qualification_grade nacionality mothers_qualification
-Dropout                     0.9990344    1.052690             1.0132154
-Enrolled                    0.9924462    1.032858             0.9915166
-         fathers_qualification mothers_occupation fathers_occupation
-Dropout              0.9873974          0.9851732           1.007548
-Enrolled             0.9967032          0.9979030           1.005104
-         admission_grade displaced educational_special_needs   debtor
-Dropout        0.9925899 1.2833626                  1.345474 2.490542
-Enrolled       0.9915838 0.8763213                  1.359963 2.089997
-         tuition_fees_up_to_date   gender scholarship_holder age_at_enrollment
-Dropout               0.06354683 1.480848          0.4686546         1.0589808
-Enrolled              0.40778114 1.300612          0.5416475         0.9951102
-         international curricular_units_1st_sem_credited
-Dropout     0.08003248                          1.252442
-Enrolled    0.26949759                          1.167418
-         curricular_units_1st_sem_enrolled curricular_units_1st_sem_evaluations
-Dropout                           1.188392                             1.021125
-Enrolled                          1.280091                             1.039827
-         curricular_units_1st_sem_approved curricular_units_1st_sem_grade
-Dropout                          0.5138511                       1.083454
-Enrolled                         0.5515144                       1.040783
+Dropout                     0.9995308    1.047471             1.0102058
+Enrolled                    0.9925951    1.036551             0.9926701
+         fathers_qualification admission_grade displaced
+Dropout              0.9950852       0.9747431  1.067442
+Enrolled             1.0016022       0.9791186  0.859151
+         educational_special_needs   debtor tuition_fees_up_to_date   gender
+Dropout                   1.935351 2.623276              0.05160095 2.078609
+Enrolled                  1.949605 2.222436              0.37587573 1.609186
+         scholarship_holder age_at_enrollment international
+Dropout           0.2447100         1.0417260     0.1027154
+Enrolled          0.4023337         0.9718444     0.2898319
+         curricular_units_1st_sem_evaluations
+Dropout                             0.9653793
+Enrolled                            0.9568308
          curricular_units_1st_sem_without_evaluations
-Dropout                                      1.015861
-Enrolled                                     1.125833
-         curricular_units_2nd_sem_credited curricular_units_2nd_sem_enrolled
-Dropout                          1.1114447                          2.828850
-Enrolled                         0.8379012                          1.971653
-         curricular_units_2nd_sem_evaluations curricular_units_2nd_sem_approved
-Dropout                             0.9891304                         0.3290530
-Enrolled                            1.1074990                         0.4827617
-         curricular_units_2nd_sem_grade
-Dropout                       0.8078536
-Enrolled                      0.8848565
+Dropout                                      1.252197
+Enrolled                                     1.199130
+         curricular_units_2nd_sem_evaluations
+Dropout                             0.9293947
+Enrolled                            1.1034399
          curricular_units_2nd_sem_without_evaluations unemployment_rate
-Dropout                                     0.7456721          1.069158
-Enrolled                                    0.8276763          0.985875
-         inflation_rate      gdp
-Dropout       0.9932663 1.035420
-Enrolled      0.9719463 1.008435</code></pre>
+Dropout                                      1.210461         0.9857434
+Enrolled                                     1.125214         0.9230729
+         inflation_rate       gdp
+Dropout        1.047077 0.9639885
+Enrolled       1.019847 0.9513805</code></pre>
 </div>
 </div>
 </section>
 <section id="variable-importance-which-predictors-matter-most" class="level4">
 <h4 class="anchored" data-anchor-id="variable-importance-which-predictors-matter-most">Variable importance: Which predictors matter most?</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>importance <span class="ot">&lt;-</span> <span class="fu">varImp</span>(model_0)</span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rank the variables by importance</span></span>
-<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>importance_df <span class="ot">&lt;-</span> importance <span class="sc">|&gt;</span></span>
-<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>((<span class="st">"Variable"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Overall))</span>
-<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="co"># view the variables df</span></span>
-<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(importance_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>importance <span class="ot">&lt;-</span> <span class="fu">varImp</span>(model_0)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rank the variables by importance</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>importance_df <span class="ot">&lt;-</span> importance <span class="sc">|&gt;</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>((<span class="st">"Variable"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Overall))</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a><span class="co"># view the variables df</span></span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(importance_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                           Variable  Overall
-1                     international 3.836519
-2           tuition_fees_up_to_date 3.653003
-3 curricular_units_2nd_sem_approved 1.839768
-4 curricular_units_2nd_sem_enrolled 1.718742
-5                            debtor 1.649663
-6                scholarship_holder 1.371029</code></pre>
+<pre><code>                   Variable  Overall
+1   tuition_fees_up_to_date 3.942712
+2             international 3.514248
+3        scholarship_holder 2.318155
+4                    debtor 1.763027
+5 educational_special_needs 1.327915
+6                    gender 1.207427</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the variables</span></span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>importance_df <span class="sc">|&gt;</span></span>
-<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">15</span>) <span class="sc">|&gt;</span></span>
-<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Variable,Overall), <span class="at">y =</span> Overall))<span class="sc">+</span></span>
-<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span><span class="st">"steelblue"</span>) <span class="sc">+</span></span>
-<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()<span class="sc">+</span></span>
-<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
-<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 15 Most Important Predictors of Student Outcome"</span>,</span>
-<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Variable"</span>,</span>
-<span id="cb67-10"><a href="#cb67-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Importance Score"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the variables</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>importance_df <span class="sc">|&gt;</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">15</span>) <span class="sc">|&gt;</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Variable,Overall), <span class="at">y =</span> Overall))<span class="sc">+</span></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span><span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()<span class="sc">+</span></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 15 Most Important Predictors of Student Outcome"</span>,</span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Variable"</span>,</span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Importance Score"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="project_code_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_code_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -847,22 +874,22 @@ Enrolled      0.9719463 1.008435</code></pre>
 <section id="classification-tree-model-using-method-class" class="level3">
 <h3 class="anchored" data-anchor-id="classification-tree-model-using-method-class">Classification tree model: (using method= “class”)</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># classification tree model</span></span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">rpart</span>(<span class="at">formula =</span> target <span class="sc">~</span> .<span class="sc">-</span>target, </span>
-<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">data=</span> training_data, </span>
-<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">method=</span> <span class="st">"class"</span>)</span>
-<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the model</span></span>
-<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(model1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># classification tree model</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">rpart</span>(<span class="at">formula =</span> target <span class="sc">~</span> .<span class="sc">-</span>target, </span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">data=</span> training_data, </span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">method=</span> <span class="st">"class"</span>)</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the model</span></span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(model1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="project_code_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_code_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(training_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(training_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 37
+<pre><code># A tibble: 6 × 27
   marital_status application_mode application_order course
            &lt;dbl&gt;            &lt;dbl&gt;             &lt;dbl&gt;  &lt;dbl&gt;
 1              1               15                 1   9254
@@ -871,27 +898,27 @@ Enrolled      0.9719463 1.008435</code></pre>
 4              2               39                 1   9991
 5              1                1                 1   9500
 6              1               18                 4   9254
-# ℹ 33 more variables: daytime_evening_attendance &lt;dbl&gt;,
+# ℹ 23 more variables: daytime_evening_attendance &lt;dbl&gt;,
 #   previous_qualification &lt;dbl&gt;, previous_qualification_grade &lt;dbl&gt;,
 #   nacionality &lt;dbl&gt;, mothers_qualification &lt;dbl&gt;,
-#   fathers_qualification &lt;dbl&gt;, mothers_occupation &lt;dbl&gt;,
-#   fathers_occupation &lt;dbl&gt;, admission_grade &lt;dbl&gt;, displaced &lt;dbl&gt;,
+#   fathers_qualification &lt;dbl&gt;, admission_grade &lt;dbl&gt;, displaced &lt;dbl&gt;,
 #   educational_special_needs &lt;dbl&gt;, debtor &lt;dbl&gt;,
-#   tuition_fees_up_to_date &lt;dbl&gt;, gender &lt;dbl&gt;, scholarship_holder &lt;dbl&gt;, …</code></pre>
+#   tuition_fees_up_to_date &lt;dbl&gt;, gender &lt;dbl&gt;, scholarship_holder &lt;dbl&gt;,
+#   age_at_enrollment &lt;dbl&gt;, international &lt;dbl&gt;, …</code></pre>
 </div>
 </div>
 <p>First value in each node = Predicted category (Low or High) Second value in each node = Proportion of non-baseline category of the outcome Third value in each node = Percent of data that falls in this node after the split (percent of data that follows this particular path in the tree)</p>
 <section id="model-evaluation-model-1" class="level4">
 <h4 class="anchored" data-anchor-id="model-evaluation-model-1">Model Evaluation: Model 1</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make predictions on the test data</span></span>
-<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>predicted_class_1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(model1, <span class="at">newdata =</span> testing_data) </span>
-<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>testing_data<span class="sc">$</span>predicted_class_1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(model1, <span class="at">newdata =</span> testing_data, </span>
-<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">type =</span> <span class="st">"class"</span>)</span>
-<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(testing_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make predictions on the test data</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>predicted_class_1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(model1, <span class="at">newdata =</span> testing_data) </span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>testing_data<span class="sc">$</span>predicted_class_1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(model1, <span class="at">newdata =</span> testing_data, </span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">type =</span> <span class="st">"class"</span>)</span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(testing_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 38
+<pre><code># A tibble: 6 × 28
   marital_status application_mode application_order course
            &lt;dbl&gt;            &lt;dbl&gt;             &lt;dbl&gt;  &lt;dbl&gt;
 1              1               17                 5    171
@@ -900,49 +927,49 @@ Enrolled      0.9719463 1.008435</code></pre>
 4              1                1                 1   9238
 5              1                1                 1   9500
 6              1                1                 1   9085
-# ℹ 34 more variables: daytime_evening_attendance &lt;dbl&gt;,
+# ℹ 24 more variables: daytime_evening_attendance &lt;dbl&gt;,
 #   previous_qualification &lt;dbl&gt;, previous_qualification_grade &lt;dbl&gt;,
 #   nacionality &lt;dbl&gt;, mothers_qualification &lt;dbl&gt;,
-#   fathers_qualification &lt;dbl&gt;, mothers_occupation &lt;dbl&gt;,
-#   fathers_occupation &lt;dbl&gt;, admission_grade &lt;dbl&gt;, displaced &lt;dbl&gt;,
+#   fathers_qualification &lt;dbl&gt;, admission_grade &lt;dbl&gt;, displaced &lt;dbl&gt;,
 #   educational_special_needs &lt;dbl&gt;, debtor &lt;dbl&gt;,
-#   tuition_fees_up_to_date &lt;dbl&gt;, gender &lt;dbl&gt;, scholarship_holder &lt;dbl&gt;, …</code></pre>
+#   tuition_fees_up_to_date &lt;dbl&gt;, gender &lt;dbl&gt;, scholarship_holder &lt;dbl&gt;,
+#   age_at_enrollment &lt;dbl&gt;, international &lt;dbl&gt;, …</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>conf_matrix_1 <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(testing_data<span class="sc">$</span>predicted_class_1, </span>
-<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>                                 testing_data<span class="sc">$</span>target)</span>
-<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>conf_matrix_1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>conf_matrix_1 <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(testing_data<span class="sc">$</span>predicted_class_1, </span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>                                 testing_data<span class="sc">$</span>target)</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>conf_matrix_1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
           Reference
 Prediction Graduate Dropout Enrolled
-  Graduate      590      52       95
-  Dropout        32     324       55
-  Enrolled       41      51       89
+  Graduate      635     227      220
+  Dropout        28     200       19
+  Enrolled        0       0        0
 
 Overall Statistics
                                           
-               Accuracy : 0.7547          
-                 95% CI : (0.7306, 0.7776)
+               Accuracy : 0.6283          
+                 95% CI : (0.6017, 0.6543)
     No Information Rate : 0.4989          
     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
                                           
-                  Kappa : 0.5908          
+                  Kappa : 0.3041          
                                           
- Mcnemar's Test P-Value : 8.041e-06       
+ Mcnemar's Test P-Value : &lt; 2.2e-16       
 
 Statistics by Class:
 
                      Class: Graduate Class: Dropout Class: Enrolled
-Sensitivity                   0.8899         0.7588         0.37238
-Specificity                   0.7793         0.9035         0.91560
-Pos Pred Value                0.8005         0.7883         0.49171
-Neg Pred Value                0.8767         0.8878         0.86934
-Prevalence                    0.4989         0.3213         0.17983
-Detection Rate                0.4439         0.2438         0.06697
-Detection Prevalence          0.5546         0.3093         0.13619
-Balanced Accuracy             0.8346         0.8312         0.64399</code></pre>
+Sensitivity                   0.9578         0.4684          0.0000
+Specificity                   0.3288         0.9479          1.0000
+Pos Pred Value                0.5869         0.8097             NaN
+Neg Pred Value                0.8866         0.7902          0.8202
+Prevalence                    0.4989         0.3213          0.1798
+Detection Rate                0.4778         0.1505          0.0000
+Detection Prevalence          0.8141         0.1859          0.0000
+Balanced Accuracy             0.6433         0.7081          0.5000</code></pre>
 </div>
 </div>
 <p>From the results, we see our model is 75% accurate in predicted which students will graduate! In addition, our kappa is 0.59 which is a moderate to substantial measure that our accuracy isn’t just a fluke of having more ‘Graduate’ data points.</p>
@@ -951,11 +978,13 @@ Balanced Accuracy             0.8346         0.8312         0.64399</code></pre>
 <section id="variable-importance-plot" class="level4">
 <h4 class="anchored" data-anchor-id="variable-importance-plot">Variable importance Plot</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vip</span>(model1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vip</span>(model1)<span class="sc">+</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill=</span><span class="st">"steelblue"</span>)<span class="sc">+</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="project_code_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_code_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -965,13 +994,13 @@ Balanced Accuracy             0.8346         0.8312         0.64399</code></pre>
 <section id="regression-tree." class="level3">
 <h3 class="anchored" data-anchor-id="regression-tree.">Regression tree.</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span><span class="fu">rpart</span>(<span class="at">formula =</span> target <span class="sc">~</span> ., <span class="at">data =</span> training_data, <span class="at">method =</span> <span class="st">"anova"</span>)</span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we use 'anova' when developing a regression tree</span></span>
-<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(model2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span><span class="fu">rpart</span>(<span class="at">formula =</span> target <span class="sc">~</span> ., <span class="at">data =</span> training_data, <span class="at">method =</span> <span class="st">"anova"</span>)</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we use 'anova' when developing a regression tree</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(model2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="project_code_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_code_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -979,32 +1008,32 @@ Balanced Accuracy             0.8346         0.8312         0.64399</code></pre>
 <section id="model-evaluation-1" class="level4">
 <h4 class="anchored" data-anchor-id="model-evaluation-1">Model Evaluation</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make predictions on the test data</span></span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>predicted_class_2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(model2, <span class="at">newdata =</span> testing_data)</span>
-<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the model to testing data</span></span>
-<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>testing_data<span class="sc">$</span>predicted_class_2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(model2, <span class="at">newdata =</span> testing_data, </span>
-<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">type =</span> <span class="st">"vector"</span>)</span>
-<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">data.frame</span>(testing_data<span class="sc">$</span>target, testing_data<span class="sc">$</span>predicted_class_2))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make predictions on the test data</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>predicted_class_2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(model2, <span class="at">newdata =</span> testing_data)</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the model to testing data</span></span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>testing_data<span class="sc">$</span>predicted_class_2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(model2, <span class="at">newdata =</span> testing_data, </span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">type =</span> <span class="st">"vector"</span>)</span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">data.frame</span>(testing_data<span class="sc">$</span>target, testing_data<span class="sc">$</span>predicted_class_2))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  testing_data.target testing_data.predicted_class_2
-1             Dropout                       1.989432
-2             Dropout                       1.989432
-3            Graduate                       1.213706
-4             Dropout                       2.245552
-5            Graduate                       1.213706
-6            Graduate                       1.213706</code></pre>
+1             Dropout                       1.882353
+2             Dropout                       2.004608
+3            Graduate                       1.318182
+4             Dropout                       2.008696
+5            Graduate                       1.318182
+6            Graduate                       1.318182</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert both to numeric before calculating</span></span>
-<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>target_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(testing_data<span class="sc">$</span>target))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert both to numeric before calculating</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>target_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(testing_data<span class="sc">$</span>target))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: NAs introduced by coercion</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>pred_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(testing_data<span class="sc">$</span>predicted_class_2))</span>
-<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate RSS</span></span>
-<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">sum</span>((target_num <span class="sc">-</span> pred_num)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>rss</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>pred_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(testing_data<span class="sc">$</span>predicted_class_2))</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate RSS</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">sum</span>((target_num <span class="sc">-</span> pred_num)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>rss</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] NA</code></pre>
 </div>
@@ -1013,11 +1042,13 @@ Balanced Accuracy             0.8346         0.8312         0.64399</code></pre>
 <section id="variable-importance-plot-1" class="level4">
 <h4 class="anchored" data-anchor-id="variable-importance-plot-1">Variable importance plot</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vip</span>(model2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vip</span>(model2)<span class="sc">+</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>)<span class="sc">+</span></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="project_code_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_code_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1027,23 +1058,7 @@ Balanced Accuracy             0.8346         0.8312         0.64399</code></pre>
 <h4 class="anchored" data-anchor-id="pruning">Pruning:</h4>
 <p>This is to help in visualizing cross validation error for different complexity parameter (cp) values</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotcp</span>(model2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="project_code_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>plotcp() illustrates the set of possible cost-complexity (cp) values on x-axis y-axis shows relative cross validation error for various penalty values (cp values) horizontal line is drawn 1 standard error above the minimum of the curve</p>
-<p>Each penalty term corresponds to a “size of tree” which is the number of terminal nodes Smaller penalty (cp values) –&gt; larger trees Larger penalty (cp values) –&gt; smaller trees A good choice of cp for pruning is often the leftmost value for which the mean lies below the horizontal line Here: cp = 0.022 tree size of 3 (terminal nodes) provides optimal cross validation</p>
-<p>Pruned model using cp = 0.055</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>pruned1 <span class="ot">&lt;-</span> <span class="fu">rpart</span>(<span class="at">formula =</span> target <span class="sc">~</span> .,<span class="at">data=</span> training_data, <span class="at">method  =</span> <span class="st">"anova"</span>, </span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">control =</span> <span class="fu">list</span>(<span class="at">cp =</span> <span class="fl">0.022</span>, <span class="at">xval =</span> <span class="dv">10</span>)) </span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># xval = 10 is a common validation number</span></span>
-<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(pruned1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotcp</span>(model2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1052,17 +1067,33 @@ Balanced Accuracy             0.8346         0.8312         0.64399</code></pre>
 </div>
 </div>
 </div>
-<p>We can try a different cp-value such as 0.014 that has more trees (5)</p>
+<p>plotcp() illustrates the set of possible cost-complexity (cp) values on x-axis y-axis shows relative cross validation error for various penalty values (cp values) horizontal line is drawn 1 standard error above the minimum of the curve</p>
+<p>Each penalty term corresponds to a “size of tree” which is the number of terminal nodes Smaller penalty (cp values) –&gt; larger trees Larger penalty (cp values) –&gt; smaller trees A good choice of cp for pruning is often the leftmost value for which the mean lies below the horizontal line Here: cp = 0.022 tree size of 3 (terminal nodes) provides optimal cross validation</p>
+<p>Pruned model using cp = 0.055</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>pruned2 <span class="ot">&lt;-</span> <span class="fu">rpart</span>(<span class="at">formula =</span> target <span class="sc">~</span> .,<span class="at">data=</span> training_data, </span>
-<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method  =</span> <span class="st">"anova"</span>,  </span>
-<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">control =</span> <span class="fu">list</span>(<span class="at">cp =</span> <span class="fl">0.014</span>, </span>
-<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">xval =</span> <span class="dv">10</span>)) <span class="co"># xval = 10 is a common validation number</span></span>
-<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(pruned2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>pruned1 <span class="ot">&lt;-</span> <span class="fu">rpart</span>(<span class="at">formula =</span> target <span class="sc">~</span> .,<span class="at">data=</span> training_data, <span class="at">method  =</span> <span class="st">"anova"</span>, </span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">control =</span> <span class="fu">list</span>(<span class="at">cp =</span> <span class="fl">0.022</span>, <span class="at">xval =</span> <span class="dv">10</span>)) </span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># xval = 10 is a common validation number</span></span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(pruned1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="project_code_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can try a different cp-value such as 0.014 that has more trees (5)</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>pruned2 <span class="ot">&lt;-</span> <span class="fu">rpart</span>(<span class="at">formula =</span> target <span class="sc">~</span> .,<span class="at">data=</span> training_data, </span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method  =</span> <span class="st">"anova"</span>,  </span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">control =</span> <span class="fu">list</span>(<span class="at">cp =</span> <span class="fl">0.014</span>, </span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">xval =</span> <span class="dv">10</span>)) <span class="co"># xval = 10 is a common validation number</span></span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(pruned2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="project_code_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1081,14 +1112,14 @@ Balanced Accuracy             0.8346         0.8312         0.64399</code></pre>
 <section id="rf-model-1" class="level4">
 <h4 class="anchored" data-anchor-id="rf-model-1">RF model 1</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>rf_model1 <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(target <span class="sc">~</span> ., <span class="at">data=</span>training_data, </span>
-<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mtry =</span> <span class="dv">8</span>, <span class="at">importance=</span><span class="cn">TRUE</span>)</span>
-<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The default mtry for classification is the square root of the </span></span>
-<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="co"># number of predictors. We have 36 predictors, therefore 9 would </span></span>
-<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a><span class="co"># be a good value for mtry.</span></span>
-<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>rf_model1 </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>rf_model1 <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(target <span class="sc">~</span> ., <span class="at">data=</span>training_data, </span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mtry =</span> <span class="dv">8</span>, <span class="at">importance=</span><span class="cn">TRUE</span>)</span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The default mtry for classification is the square root of the </span></span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a><span class="co"># number of predictors. We have 36 predictors, therefore 9 would </span></span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a><span class="co"># be a good value for mtry.</span></span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a>rf_model1 </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1097,18 +1128,18 @@ Call:
                      Number of trees: 500
 No. of variables tried at each split: 8
 
-        OOB estimate of  error rate: 22.39%
+        OOB estimate of  error rate: 30.73%
 Confusion matrix:
          Graduate Dropout Enrolled class.error
-Graduate     1449      37       60  0.06274256
-Dropout       163     759       72  0.23641851
-Enrolled      239     122      194  0.65045045</code></pre>
+Graduate     1358     107       81   0.1216041
+Dropout       261     652       81   0.3440644
+Enrolled      289     132      134   0.7585586</code></pre>
 </div>
 </div>
 <p>The high error rate for the <strong>Enrolled</strong> class (61.8%) stands out. While the model is great at identifying students who graduate, it is struggling significantly to distinguish between students who are still Enrolled and those who have Dropped out.</p>
 <p>Let’s check how the Target class is balanced as any inbalance in the ‘Target’ categories could be causing this high error rate!</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(training_data<span class="sc">$</span>target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(training_data<span class="sc">$</span>target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Graduate  Dropout Enrolled 
@@ -1118,17 +1149,17 @@ Graduate  Dropout Enrolled
 <p>The table confirms a significant <strong>class imbalance</strong>: we have nearly three times as many Graduates as Enrolled students. The model is biased toward the “Graduate” class because it has the most observations (1,546). The “Enrolled” class is the smallest, leading the model to misclassify 224 Enrolled students as Graduates!</p>
 <p>Let’s try a <strong>Balanced Random Forest</strong> by sampling an equal number of rows from each class when building the trees.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's set the sample size based on our smallest class (Enrolled = 555)</span></span>
-<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This forces the model to treat all classes with equal weight</span></span>
-<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>rf_model1_balanced <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(</span>
-<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>  target <span class="sc">~</span> ., </span>
-<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> training_data, </span>
-<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mtry =</span> <span class="dv">8</span>, </span>
-<span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">importance =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb91-8"><a href="#cb91-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sampsize =</span> <span class="fu">c</span>(<span class="st">"Graduate"</span> <span class="ot">=</span> <span class="dv">555</span>, <span class="st">"Dropout"</span> <span class="ot">=</span> <span class="dv">555</span>, <span class="st">"Enrolled"</span> <span class="ot">=</span> <span class="dv">555</span>)</span>
-<span id="cb91-9"><a href="#cb91-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb91-10"><a href="#cb91-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb91-11"><a href="#cb91-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rf_model1_balanced)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's set the sample size based on our smallest class (Enrolled = 555)</span></span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This forces the model to treat all classes with equal weight</span></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>rf_model1_balanced <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(</span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>  target <span class="sc">~</span> ., </span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> training_data, </span>
+<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mtry =</span> <span class="dv">8</span>, </span>
+<span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">importance =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb93-8"><a href="#cb93-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sampsize =</span> <span class="fu">c</span>(<span class="st">"Graduate"</span> <span class="ot">=</span> <span class="dv">555</span>, <span class="st">"Dropout"</span> <span class="ot">=</span> <span class="dv">555</span>, <span class="st">"Enrolled"</span> <span class="ot">=</span> <span class="dv">555</span>)</span>
+<span id="cb93-9"><a href="#cb93-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb93-10"><a href="#cb93-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-11"><a href="#cb93-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rf_model1_balanced)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1137,12 +1168,12 @@ Call:
                      Number of trees: 500
 No. of variables tried at each split: 8
 
-        OOB estimate of  error rate: 24.39%
+        OOB estimate of  error rate: 32.83%
 Confusion matrix:
          Graduate Dropout Enrolled class.error
-Graduate     1312      38      196   0.1513583
-Dropout       110     721      163   0.2746479
-Enrolled      149      99      307   0.4468468</code></pre>
+Graduate     1146     135      265   0.2587322
+Dropout       166     637      191   0.3591549
+Enrolled      154     105      296   0.4666667</code></pre>
 </div>
 </div>
 <p>This is a much better balance! By downsampling, we cut the <strong>Enrolled</strong> error rate from <strong>67% down to 44%</strong>.</p>
@@ -1156,43 +1187,43 @@ Enrolled      149      99      307   0.4468468</code></pre>
 <section id="model-evaluation-2" class="level4">
 <h4 class="anchored" data-anchor-id="model-evaluation-2">Model Evaluation</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># predict using the balanced random forest model</span></span>
-<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>predicted_class_3 <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_model1_balanced, <span class="at">newdata =</span> testing_data)</span>
-<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
-<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a>brf_cm <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(predicted_class_3, testing_data<span class="sc">$</span>target)</span>
-<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a>brf_cm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># predict using the balanced random forest model</span></span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>predicted_class_3 <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_model1_balanced, <span class="at">newdata =</span> testing_data)</span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
+<span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a>brf_cm <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(predicted_class_3, testing_data<span class="sc">$</span>target)</span>
+<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a>brf_cm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
           Reference
 Prediction Graduate Dropout Enrolled
-  Graduate      573      41       63
-  Dropout        18     317       35
-  Enrolled       72      69      141
+  Graduate      491      69       73
+  Dropout        51     278       34
+  Enrolled      121      80      132
 
 Overall Statistics
-                                          
-               Accuracy : 0.7758          
-                 95% CI : (0.7524, 0.7979)
-    No Information Rate : 0.4989          
-    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-                                          
-                  Kappa : 0.6373          
-                                          
- Mcnemar's Test P-Value : 0.0001226       
+                                         
+               Accuracy : 0.678          
+                 95% CI : (0.6521, 0.703)
+    No Information Rate : 0.4989         
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16      
+                                         
+                  Kappa : 0.4885         
+                                         
+ Mcnemar's Test P-Value : 3.012e-07      
 
 Statistics by Class:
 
                      Class: Graduate Class: Dropout Class: Enrolled
-Sensitivity                   0.8643         0.7424          0.5900
-Specificity                   0.8438         0.9412          0.8706
-Pos Pred Value                0.8464         0.8568          0.5000
-Neg Pred Value                0.8620         0.8853          0.9064
-Prevalence                    0.4989         0.3213          0.1798
-Detection Rate                0.4312         0.2385          0.1061
-Detection Prevalence          0.5094         0.2784          0.2122
-Balanced Accuracy             0.8540         0.8418          0.7303</code></pre>
+Sensitivity                   0.7406         0.6511         0.55230
+Specificity                   0.7868         0.9058         0.81560
+Pos Pred Value                0.7757         0.7658         0.39640
+Neg Pred Value                0.7529         0.8458         0.89257
+Prevalence                    0.4989         0.3213         0.17983
+Detection Rate                0.3695         0.2092         0.09932
+Detection Prevalence          0.4763         0.2731         0.25056
+Balanced Accuracy             0.7637         0.7784         0.68395</code></pre>
 </div>
 </div>
 <p>Our Enrolled sensitivity is now nearly 60% (59.8%) which means we are correctly identifying nearly 60% of the Enrolled Students. This is a massive jump from the 27% our logistic regression was catching. Our Kappa is 0.6448 in which a Kappa above 0.60 is generally considered a substantial agreement that our model’s predictions are reliable and not just due to random chance or class size bias. Lastly, our Dropout class prediction is high 0.9457, meaning it is incredibly good at not falsely accusing a student of dropping out if they aren’t actually doing so.</p>
@@ -1201,134 +1232,105 @@ Balanced Accuracy             0.8540         0.8418          0.7303</code></pre>
 <section id="variable-importance" class="level4">
 <h4 class="anchored" data-anchor-id="variable-importance">Variable Importance</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">varImpPlot</span>(rf_model1_balanced)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">varImpPlot</span>(rf_model1_balanced)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="project_code_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_code_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(rf_model1_balanced)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(rf_model1_balanced)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                                               Graduate      Dropout   Enrolled
-marital_status                                4.9267538  -1.02046749  1.8695961
-application_mode                             11.7513722   6.58513202  1.4916194
-application_order                             0.3944040   2.21899093 -0.2121969
-course                                       22.5883513  -5.97986064 13.5544334
-daytime_evening_attendance                    3.1183449  -3.29372973  3.1570517
-previous_qualification                        3.8430577   1.23646893  2.0305521
-previous_qualification_grade                 17.3811555   2.32990600  2.9838991
-nacionality                                   4.9374493   1.70661599 -0.8229970
-mothers_qualification                         2.4134343   4.81149205  2.7063036
-fathers_qualification                         2.1144860   2.33728909  0.1098874
-mothers_occupation                           10.9662256   5.73888543  7.1938326
-fathers_occupation                            6.8407493   3.83048892  2.6694306
-admission_grade                              17.3428010   1.48662517  4.1521766
-displaced                                     5.3645539   2.21049593 -0.8822709
-educational_special_needs                     0.1234194  -1.43349154  0.2100725
-debtor                                       12.5455887   6.69142989  2.9379792
-tuition_fees_up_to_date                      30.1360956  39.85214514 19.8625479
-gender                                        9.5236005   1.63911840 -1.8715778
-scholarship_holder                           13.1444295  11.97339296  6.3132674
-age_at_enrollment                            14.6285969  22.70499926  5.1782748
-international                                 0.6142103  -0.73580503 -0.2750745
-curricular_units_1st_sem_credited             8.0049953   6.55498090  0.8604290
-curricular_units_1st_sem_enrolled            17.0533057  -7.96728036  8.7855346
-curricular_units_1st_sem_evaluations         23.8294813   3.98770192 11.0136723
-curricular_units_1st_sem_approved            35.7312665  15.83142956  2.6692382
-curricular_units_1st_sem_grade               22.1085291   5.56684817  2.4875142
-curricular_units_1st_sem_without_evaluations 12.2916952   0.94241442 -1.2380215
-curricular_units_2nd_sem_credited             7.2938854   4.37187974  1.1648724
-curricular_units_2nd_sem_enrolled            17.4729367 -11.78755426 10.5821451
-curricular_units_2nd_sem_evaluations         18.6775525  13.62899727 14.4468766
-curricular_units_2nd_sem_approved            64.1283306  26.54396706 19.1428583
-curricular_units_2nd_sem_grade               29.8117263  20.10462775  8.9117755
-curricular_units_2nd_sem_without_evaluations  9.4994309  -2.09130579 -1.5152306
-unemployment_rate                            10.9358500   0.25874285  0.4191114
-inflation_rate                                7.4085165   0.04103569  2.9710948
-gdp                                           4.7055865   1.03568603  8.2559796
+<pre><code>                                               Graduate     Dropout   Enrolled
+marital_status                                7.0802736 -10.3483212  2.8495149
+application_mode                             18.5084092   6.0511538  3.6102101
+application_order                             2.3301064   0.5152681  2.6929077
+course                                       40.1942634 -16.0218042 13.5413622
+daytime_evening_attendance                    9.0527602  -7.8366187  8.6137286
+previous_qualification                        6.7709555   2.0166075  4.0975402
+previous_qualification_grade                 21.2166727   5.9611149  4.8823489
+nacionality                                   2.9252508  -2.3321478 -0.9079675
+mothers_qualification                         1.4045530   6.0350907  4.2459712
+fathers_qualification                        -1.0037344   3.9326224  0.3029917
+admission_grade                              22.3697672  -0.1658454  5.6573125
+displaced                                    11.0726361   0.7377077  3.3072790
+educational_special_needs                     1.6098207  -1.2770507 -1.6688508
+debtor                                       17.8268131   8.4152052  5.0324983
+tuition_fees_up_to_date                      63.0518270  72.1919057 21.2246817
+gender                                       19.5154138   8.1479256  0.6591909
+scholarship_holder                           22.8392731  23.6710267  6.7310391
+age_at_enrollment                            32.4036460  26.3333639  1.6748271
+international                                -0.2444098  -0.3373260  2.4223316
+curricular_units_1st_sem_evaluations         45.2261223  16.0541967 18.8063977
+curricular_units_1st_sem_without_evaluations 17.5835084   3.4920285  4.8405962
+curricular_units_2nd_sem_evaluations         48.9761547  35.8145994 24.1007819
+curricular_units_2nd_sem_without_evaluations 12.2420922   4.4971484 -4.6287866
+unemployment_rate                            19.4982513   5.5956755  7.1955222
+inflation_rate                               10.0805448  -0.2043665  7.5749918
+gdp                                          14.8335097   5.6153500 10.4987230
                                              MeanDecreaseAccuracy
-marital_status                                         3.97300503
-application_mode                                      13.76737605
-application_order                                      1.07931914
-course                                                23.11044866
-daytime_evening_attendance                             2.04198500
-previous_qualification                                 4.64630164
-previous_qualification_grade                          18.16797777
-nacionality                                            4.54295911
-mothers_qualification                                  5.60224655
-fathers_qualification                                  3.01541143
-mothers_occupation                                    14.29490503
-fathers_occupation                                     8.52607083
-admission_grade                                       17.48507146
-displaced                                              5.36661121
-educational_special_needs                             -0.51806846
-debtor                                                12.46045900
-tuition_fees_up_to_date                               39.93346951
-gender                                                 7.79320411
-scholarship_holder                                    17.04225883
-age_at_enrollment                                     24.17098097
-international                                         -0.04242714
-curricular_units_1st_sem_credited                     10.31495892
-curricular_units_1st_sem_enrolled                     15.18711637
-curricular_units_1st_sem_evaluations                  25.50669990
-curricular_units_1st_sem_approved                     35.65258381
-curricular_units_1st_sem_grade                        23.55623029
-curricular_units_1st_sem_without_evaluations          12.13198122
-curricular_units_2nd_sem_credited                      8.86842044
-curricular_units_2nd_sem_enrolled                     16.00773525
-curricular_units_2nd_sem_evaluations                  24.80066414
-curricular_units_2nd_sem_approved                     56.85532152
-curricular_units_2nd_sem_grade                        32.34023457
-curricular_units_2nd_sem_without_evaluations           7.72024776
-unemployment_rate                                      9.37300316
-inflation_rate                                         7.53933304
-gdp                                                    7.16488393
+marital_status                                          1.2685112
+application_mode                                       20.9907089
+application_order                                       3.1703782
+course                                                 34.5545418
+daytime_evening_attendance                              7.1852036
+previous_qualification                                  8.3131857
+previous_qualification_grade                           23.1651788
+nacionality                                            -0.1835159
+mothers_qualification                                   6.0026101
+fathers_qualification                                   1.2007796
+admission_grade                                        22.5047497
+displaced                                              11.0993346
+educational_special_needs                              -0.1790255
+debtor                                                 18.1365627
+tuition_fees_up_to_date                                78.6374159
+gender                                                 19.9739436
+scholarship_holder                                     31.0665214
+age_at_enrollment                                      39.9781476
+international                                           0.5071340
+curricular_units_1st_sem_evaluations                   49.7265566
+curricular_units_1st_sem_without_evaluations           18.4801408
+curricular_units_2nd_sem_evaluations                   57.1976062
+curricular_units_2nd_sem_without_evaluations           11.8207168
+unemployment_rate                                      21.0212491
+inflation_rate                                         10.8231889
+gdp                                                    18.5768894
                                              MeanDecreaseGini
-marital_status                                      4.4227318
-application_mode                                   23.4831563
-application_order                                  16.5395475
-course                                             42.0135909
-daytime_evening_attendance                          3.3406569
-previous_qualification                              7.5605669
-previous_qualification_grade                       46.2451820
-nacionality                                         2.5884905
-mothers_qualification                              27.2901350
-fathers_qualification                              25.8646013
-mothers_occupation                                 33.0568810
-fathers_occupation                                 36.5636147
-admission_grade                                    53.1969270
-displaced                                           9.2259082
-educational_special_needs                           0.9449122
-debtor                                              9.9257397
-tuition_fees_up_to_date                            38.9196976
-gender                                             10.2754188
-scholarship_holder                                 14.6344186
-age_at_enrollment                                  50.1292696
-international                                       1.7602682
-curricular_units_1st_sem_credited                   7.8389219
-curricular_units_1st_sem_enrolled                  20.9062628
-curricular_units_1st_sem_evaluations               46.3241877
-curricular_units_1st_sem_approved                  80.1962864
-curricular_units_1st_sem_grade                     70.4556896
-curricular_units_1st_sem_without_evaluations        6.3720934
-curricular_units_2nd_sem_credited                   7.1452969
-curricular_units_2nd_sem_enrolled                  22.5424578
-curricular_units_2nd_sem_evaluations               51.8412125
-curricular_units_2nd_sem_approved                 139.2374114
-curricular_units_2nd_sem_grade                    108.9623319
-curricular_units_2nd_sem_without_evaluations        5.8523718
-unemployment_rate                                  26.5521528
-inflation_rate                                     27.6979292
-gdp                                                28.6597830</code></pre>
+marital_status                                       7.129158
+application_mode                                    43.900489
+application_order                                   28.440343
+course                                              81.677136
+daytime_evening_attendance                           6.360107
+previous_qualification                              14.977274
+previous_qualification_grade                        87.296511
+nacionality                                          3.350266
+mothers_qualification                               50.578785
+fathers_qualification                               47.614856
+admission_grade                                    104.760657
+displaced                                           18.142890
+educational_special_needs                            1.926671
+debtor                                              13.803215
+tuition_fees_up_to_date                             67.649502
+gender                                              22.214443
+scholarship_holder                                  31.080369
+age_at_enrollment                                   85.129876
+international                                        2.373198
+curricular_units_1st_sem_evaluations               105.239012
+curricular_units_1st_sem_without_evaluations        12.301293
+curricular_units_2nd_sem_evaluations               118.765342
+curricular_units_2nd_sem_without_evaluations        10.085301
+unemployment_rate                                   49.438176
+inflation_rate                                      43.604218
+gdp                                                 50.124339</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variable importance plot</span></span>
-<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vip</span>(rf_model1_balanced)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variable importance plot</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vip</span>(rf_model1_balanced)<span class="sc">+</span></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="project_code_files/figure-html/unnamed-chunk-30-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_code_files/figure-html/unnamed-chunk-31-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1363,39 +1365,39 @@ gdp                                                28.6597830</code></pre>
 <section id="model-comparison" class="level4">
 <h4 class="anchored" data-anchor-id="model-comparison">Model Comparison</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's create a data frame with the Sensitivity scores we've gathered</span></span>
-<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>comparison_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Model =</span> <span class="fu">c</span>(<span class="st">"Multinomial Logistic"</span>, <span class="st">"Classification Tree"</span>, </span>
-<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Balanced Random Forest"</span>),</span>
-<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Graduate =</span> <span class="fu">c</span>(<span class="fl">0.937</span>, <span class="fl">0.890</span>, <span class="fl">0.847</span>),</span>
-<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Dropout =</span> <span class="fu">c</span>(<span class="fl">0.785</span>, <span class="fl">0.759</span>, <span class="fl">0.730</span>),</span>
-<span id="cb99-7"><a href="#cb99-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Enrolled =</span> <span class="fu">c</span>(<span class="fl">0.276</span>, <span class="fl">0.372</span>, <span class="fl">0.544</span>) <span class="co"># RF scores from the balanced OOB</span></span>
-<span id="cb99-8"><a href="#cb99-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb99-9"><a href="#cb99-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-10"><a href="#cb99-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape for plotting</span></span>
-<span id="cb99-11"><a href="#cb99-11" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(comparison_data, </span>
-<span id="cb99-12"><a href="#cb99-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Graduate"</span>, <span class="st">"Dropout"</span>, <span class="st">"Enrolled"</span>), </span>
-<span id="cb99-13"><a href="#cb99-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">names_to =</span> <span class="st">"Class"</span>, </span>
-<span id="cb99-14"><a href="#cb99-14" aria-hidden="true" tabindex="-1"></a>                          <span class="at">values_to =</span> <span class="st">"Sensitivity"</span>)</span>
-<span id="cb99-15"><a href="#cb99-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-16"><a href="#cb99-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a comparison plot</span></span>
-<span id="cb99-17"><a href="#cb99-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Class, <span class="at">y =</span> Sensitivity, <span class="at">fill =</span> Model)) <span class="sc">+</span></span>
-<span id="cb99-18"><a href="#cb99-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb99-19"><a href="#cb99-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb99-20"><a href="#cb99-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Model Comparison: Sensitivity by Student Outcome"</span>,</span>
-<span id="cb99-21"><a href="#cb99-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"The Balanced Random Forest is the only model that </span></span>
-<span id="cb99-22"><a href="#cb99-22" aria-hidden="true" tabindex="-1"></a><span class="st">       effectively 'catches' Enrolled students"</span>,</span>
-<span id="cb99-23"><a href="#cb99-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Sensitivity (Recall)"</span>,</span>
-<span id="cb99-24"><a href="#cb99-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Student Status"</span>) <span class="sc">+</span></span>
-<span id="cb99-25"><a href="#cb99-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>) <span class="sc">+</span></span>
-<span id="cb99-26"><a href="#cb99-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(Sensitivity, <span class="dv">2</span>)), </span>
-<span id="cb99-27"><a href="#cb99-27" aria-hidden="true" tabindex="-1"></a>            <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), </span>
-<span id="cb99-28"><a href="#cb99-28" aria-hidden="true" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
-<span id="cb99-29"><a href="#cb99-29" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's create a data frame with the Sensitivity scores we've gathered</span></span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>comparison_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Model =</span> <span class="fu">c</span>(<span class="st">"Multinomial Logistic"</span>, <span class="st">"Classification Tree"</span>, </span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Balanced Random Forest"</span>),</span>
+<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Graduate =</span> <span class="fu">c</span>(<span class="fl">0.937</span>, <span class="fl">0.890</span>, <span class="fl">0.847</span>),</span>
+<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Dropout =</span> <span class="fu">c</span>(<span class="fl">0.785</span>, <span class="fl">0.759</span>, <span class="fl">0.730</span>),</span>
+<span id="cb101-7"><a href="#cb101-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Enrolled =</span> <span class="fu">c</span>(<span class="fl">0.276</span>, <span class="fl">0.372</span>, <span class="fl">0.544</span>) <span class="co"># RF scores from the balanced OOB</span></span>
+<span id="cb101-8"><a href="#cb101-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb101-9"><a href="#cb101-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb101-10"><a href="#cb101-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape for plotting</span></span>
+<span id="cb101-11"><a href="#cb101-11" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(comparison_data, </span>
+<span id="cb101-12"><a href="#cb101-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Graduate"</span>, <span class="st">"Dropout"</span>, <span class="st">"Enrolled"</span>), </span>
+<span id="cb101-13"><a href="#cb101-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">names_to =</span> <span class="st">"Class"</span>, </span>
+<span id="cb101-14"><a href="#cb101-14" aria-hidden="true" tabindex="-1"></a>                          <span class="at">values_to =</span> <span class="st">"Sensitivity"</span>)</span>
+<span id="cb101-15"><a href="#cb101-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb101-16"><a href="#cb101-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a comparison plot</span></span>
+<span id="cb101-17"><a href="#cb101-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Class, <span class="at">y =</span> Sensitivity, <span class="at">fill =</span> Model)) <span class="sc">+</span></span>
+<span id="cb101-18"><a href="#cb101-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb101-19"><a href="#cb101-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb101-20"><a href="#cb101-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Model Comparison: Sensitivity by Student Outcome"</span>,</span>
+<span id="cb101-21"><a href="#cb101-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"The Balanced Random Forest is the only model that </span></span>
+<span id="cb101-22"><a href="#cb101-22" aria-hidden="true" tabindex="-1"></a><span class="st">       effectively 'catches' Enrolled students"</span>,</span>
+<span id="cb101-23"><a href="#cb101-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Sensitivity (Recall)"</span>,</span>
+<span id="cb101-24"><a href="#cb101-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Student Status"</span>) <span class="sc">+</span></span>
+<span id="cb101-25"><a href="#cb101-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>) <span class="sc">+</span></span>
+<span id="cb101-26"><a href="#cb101-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(Sensitivity, <span class="dv">2</span>)), </span>
+<span id="cb101-27"><a href="#cb101-27" aria-hidden="true" tabindex="-1"></a>            <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), </span>
+<span id="cb101-28"><a href="#cb101-28" aria-hidden="true" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
+<span id="cb101-29"><a href="#cb101-29" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="project_code_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_code_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1405,7 +1407,153 @@ gdp                                                28.6597830</code></pre>
 <section id="convert-to-r-script" class="level3">
 <h3 class="anchored" data-anchor-id="convert-to-r-script">Convert to R script</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">purl</span>(<span class="st">"project_code.qmd"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">purl</span>(<span class="st">"project_code.qmd"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+
+processing file: project_code.qmd</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                         
+  |                                                   |   0%
+  |                                                         
+  |.                                                  |   2%                   
+  |                                                         
+  |..                                                 |   3% [unnamed-chunk-67]
+  |                                                         
+  |..                                                 |   5%                   
+  |                                                         
+  |...                                                |   6% [unnamed-chunk-68]
+  |                                                         
+  |....                                               |   8%                   
+  |                                                         
+  |.....                                              |   9% [unnamed-chunk-69]
+  |                                                         
+  |.....                                              |  11%                   
+  |                                                         
+  |......                                             |  12% [unnamed-chunk-70]
+  |                                                         
+  |.......                                            |  14%                   
+  |                                                         
+  |........                                           |  15% [unnamed-chunk-71]
+  |                                                         
+  |........                                           |  17%                   
+  |                                                         
+  |.........                                          |  18% [unnamed-chunk-72]
+  |                                                         
+  |..........                                         |  20%                   
+  |                                                         
+  |...........                                        |  21% [unnamed-chunk-73]
+  |                                                         
+  |............                                       |  23%                   
+  |                                                         
+  |............                                       |  24% [unnamed-chunk-74]
+  |                                                         
+  |.............                                      |  26%                   
+  |                                                         
+  |..............                                     |  27% [unnamed-chunk-75]
+  |                                                         
+  |...............                                    |  29%                   
+  |                                                         
+  |...............                                    |  30% [unnamed-chunk-76]
+  |                                                         
+  |................                                   |  32%                   
+  |                                                         
+  |.................                                  |  33% [unnamed-chunk-77]
+  |                                                         
+  |..................                                 |  35%                   
+  |                                                         
+  |...................                                |  36% [unnamed-chunk-78]
+  |                                                         
+  |...................                                |  38%                   
+  |                                                         
+  |....................                               |  39% [unnamed-chunk-79]
+  |                                                         
+  |.....................                              |  41%                   
+  |                                                         
+  |......................                             |  42% [unnamed-chunk-80]
+  |                                                         
+  |......................                             |  44%                   
+  |                                                         
+  |.......................                            |  45% [unnamed-chunk-81]
+  |                                                         
+  |........................                           |  47%                   
+  |                                                         
+  |.........................                          |  48% [unnamed-chunk-82]
+  |                                                         
+  |..........................                         |  50%                   
+  |                                                         
+  |..........................                         |  52% [unnamed-chunk-83]
+  |                                                         
+  |...........................                        |  53%                   
+  |                                                         
+  |............................                       |  55% [unnamed-chunk-84]
+  |                                                         
+  |.............................                      |  56%                   
+  |                                                         
+  |.............................                      |  58% [unnamed-chunk-85]
+  |                                                         
+  |..............................                     |  59%                   
+  |                                                         
+  |...............................                    |  61% [unnamed-chunk-86]
+  |                                                         
+  |................................                   |  62%                   
+  |                                                         
+  |................................                   |  64% [unnamed-chunk-87]
+  |                                                         
+  |.................................                  |  65%                   
+  |                                                         
+  |..................................                 |  67% [unnamed-chunk-88]
+  |                                                         
+  |...................................                |  68%                   
+  |                                                         
+  |....................................               |  70% [unnamed-chunk-89]
+  |                                                         
+  |....................................               |  71%                   
+  |                                                         
+  |.....................................              |  73% [unnamed-chunk-90]
+  |                                                         
+  |......................................             |  74%                   
+  |                                                         
+  |.......................................            |  76% [unnamed-chunk-91]
+  |                                                         
+  |.......................................            |  77%                   
+  |                                                         
+  |........................................           |  79% [unnamed-chunk-92]
+  |                                                         
+  |.........................................          |  80%                   
+  |                                                         
+  |..........................................         |  82% [unnamed-chunk-93]
+  |                                                         
+  |..........................................         |  83%                   
+  |                                                         
+  |...........................................        |  85% [unnamed-chunk-94]
+  |                                                         
+  |............................................       |  86%                   
+  |                                                         
+  |.............................................      |  88% [unnamed-chunk-95]
+  |                                                         
+  |..............................................     |  89%                   
+  |                                                         
+  |..............................................     |  91% [unnamed-chunk-96]
+  |                                                         
+  |...............................................    |  92%                   
+  |                                                         
+  |................................................   |  94% [unnamed-chunk-97]
+  |                                                         
+  |.................................................  |  95%                   
+  |                                                         
+  |.................................................  |  97% [unnamed-chunk-98]
+  |                                                         
+  |.................................................. |  98%                   
+  |                                                         
+  |...................................................| 100% [unnamed-chunk-99]
+                                                                                                             </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>output file: project_code.R</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "project_code.R"</code></pre>
 </div>
