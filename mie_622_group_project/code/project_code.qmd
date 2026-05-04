@@ -126,7 +126,13 @@ prop.table(table(testing_data$target))
 
 Before building the model, let's check whether any of our independent variables are highly correlated with each other. If two variables are almost identical, it will confuse the model and inflate the standard errors.
 
-We will use the Variance Inflation Factor(VIF), whereby if vif = 1, we have no correlation at atll, VIF is 1- 5, we moderate correlation (fine), and VIF 5 - 10 we have a higher correlation.
+We will use the Variance Inflation Factor(VIF), whereby,
+
+- if VIF = 1, we have no correlation at all,
+
+- if VIF = 1- 5, we have moderate correlation (fine), and
+
+- if VIF = 5 - 10 we have a higher correlation.
 
 ```{r}
 # We first fit a temporary linear model just to extract VIF values - this 
@@ -135,32 +141,62 @@ temp_model <- lm(as.numeric(target) ~ ., data = training_data)
 vif_values <- vif(temp_model) # get the vif values from the model
 vif_values[vif_values > 5] # show variables that have vif values greater 
 # than 5 (potential collinearity issue)
-
-# remove the flagged variables from both training and testing data sets
-training_data <- training_data |> select (-c("mothers_occupation", 
-                                             "fathers_occupation",
-                                             "curricular_units_1st_sem_credited",
-                                             "curricular_units_1st_sem_enrolled",
-                                             "curricular_units_1st_sem_approved",
-                                             "curricular_units_1st_sem_grade",
-                                             "curricular_units_2nd_sem_credited",
-                                             "curricular_units_2nd_sem_enrolled",
-                                             "curricular_units_2nd_sem_approved",
-                                             "curricular_units_2nd_sem_grade"
-                                             ))
-testing_data <- testing_data |> select(-c("mothers_occupation", 
-                                             "fathers_occupation",
-                                             "curricular_units_1st_sem_credited",
-                                             "curricular_units_1st_sem_enrolled",
-                                             "curricular_units_1st_sem_approved",
-                                             "curricular_units_1st_sem_grade",
-                                             "curricular_units_2nd_sem_credited",
-                                             "curricular_units_2nd_sem_enrolled",
-                                             "curricular_units_2nd_sem_approved",
-                                             "curricular_units_2nd_sem_grade"))
 ```
 
-We have 10 independent variables that have vif values above 5 where 6 of the variables have vif values above 10. For the variables with a vif above 10 we will remove one of them say 'Curricular units 1st sem (enrolled)'.
+- We have 10 independent variables that have VIF values above 5 where 6 of the variables have VIF values above 10.
+
+- For the variables with a VIF value above 5 we will compare them pairwise using a correlation matrix and pick the one that is more meaningful from each correlated pair.
+
+```{r}
+# Compute a correlation matrix for all numeric predictors
+# (excluding Target)
+numeric_vars <- training_data |> select(-target)
+cor_matrix <- cor(numeric_vars)
+
+# Visualize it — easier to spot pairs of correlated variables
+library(corrplot)
+corrplot(cor_matrix, method = "color", tl.cex = 0.6)
+```
+
+Based on the correlation plot, we will remove some of the variables and keep the more meaningful one from each correlated pair.
+
+```{r}
+# Parental background — keep mothers_qualification & fathers_occupation
+# Previous qualification — keep previous_qualification_grade
+# Curricular units — keep 2nd sem approved & grade only
+# Economic indicators — keep unemployment_rate
+
+vars_to_remove <- c(
+  "fathers_qualification",
+  "mothers_occupation",
+  "previous_qualification",
+  "curricular_units_1st_sem_credited",
+  "curricular_units_1st_sem_enrolled",
+  "curricular_units_1st_sem_evaluations",
+  "curricular_units_1st_sem_approved",
+  "curricular_units_1st_sem_grade",
+  "curricular_units_1st_sem_without_evaluations",
+  "curricular_units_2nd_sem_credited",
+  "curricular_units_2nd_sem_enrolled",
+  "curricular_units_2nd_sem_evaluations",
+  "curricular_units_2nd_sem_without_evaluations",
+  "inflation_rate",
+  "gdp"
+)
+
+training_data <- training_data |> select(-all_of(vars_to_remove))
+testing_data  <- testing_data  |> select(-all_of(vars_to_remove))
+```
+
+Rerun VIF to check and confirm
+
+```{r}
+temp_model_2 <- lm(as.numeric(target) ~ ., data = training_data)
+vif(temp_model_2)
+# All VIF values should now be below 5
+```
+
+Every single VIF value is below 5. We now have 22 variables in our training data in which 21 are independent variables.
 
 We can now develop a logistic regression model to predict 'target' using all other independent variables.
 
@@ -184,7 +220,72 @@ cat("McFadden's Pseudo R²:", round(as.numeric(mcfadden_r2), 4), "\n") # print
 # the pseudo R squared value
 ```
 
-Our AIC is 3542.901, we will use this as the baseline once we start comparing with other models. Nevertheless, our McFadden R-squared is 0.46, on a scale of 0 to 1, this is a strong model considering an excellent model has values between 0.2 and 0.4.
+Our AIC is 4101.955, we will use this as the baseline once we start comparing with other models. In addition, our McFadden R-squared is 0.3641, on a scale of 0 to 1, this is a good fit considering an excellent model has values between greater than 0.4. This means 36% of the variation in student outcomes can be explained by the model.
+
+To get our biggest contributors to student dropout (**THIS ANSWERS OUR RESEARCH QUESTION**), we will exponentiate the coefficients from the model to get the Odds ratios - also known as Relative Risk Ratios(RRR).
+
+- If RRR (Odds ratio) = 1.0 -\> no effect
+
+- if RRR (Odds ratio) \> 1.0 -\> that variable increases the probability of being in that class vs the reference class (Graduate)
+
+- if RRR (Odds ratio) \< 1.0 -\> that variable increases the probability of being in that class vs the reference class (Graduate)
+
+For example: if the odd ratio for "Curricular units 1st sem (approved)" in the Graduate vs. Dropout row is 1.8, it means a student who passes one more unit in the first semester is 1.8× more likely to dropout than to graduate.
+
+```{r}
+# Odds ratios a.k.a Relative Risk Ratios: exp(coefficients)
+odds_ratios <- exp(coef(model_0))
+odds_ratios
+```
+
+#### Variable importance: Which predictors matter most?
+
+We will use the variable importance plot to make the odds ratio easier to interpret.
+
+```{r}
+# Create a clean odds ratio dataframe for plotting
+or_df <- data.frame(
+  Variable = colnames(coef(model_0)),
+  OR_Dropout = as.numeric(exp(coef(model_0))["Dropout", ])
+) |>
+  filter(Variable != "(Intercept)") |>  # remove intercept
+  mutate(
+    Direction = ifelse(OR_Dropout > 1, "Risk Factor", "Protective Factor")
+  ) |>
+  arrange(desc(OR_Dropout))
+
+# Plot
+ggplot(or_df, aes(x = reorder(Variable, OR_Dropout), 
+                   y = OR_Dropout, 
+                   fill = Direction)) +
+  geom_col() +
+  geom_hline(yintercept = 1, 
+             linetype = "dashed", 
+             color = "black") +
+  coord_flip() +
+  scale_fill_manual(values = c("Risk Factor" = "tomato", 
+                                "Protective Factor" = "steelblue")) +
+  theme_minimal() +
+  labs(title = "Variable Importance Plot",
+    subtitle = "Odds Ratios: Dropout vs. Graduate",
+       x = "Variable",
+       y = "Odds Ratio",
+       fill = "")
+```
+
+Everything to the right of the dashed line (0R\>1) = increases dropout risk compared to graduating. These are all the variables shown in red. Our strongest risk factor to dropout is debt. Being a debtor (financial obligation) makes a student 2.6x more likely to dropout than graduate.
+
+Everything to the left of the dashed line (OR\<1) = decreases dropout risk compared to graduating. These are all the variables shown in blue. Having tuition fees up to date (financial stability) is the strongest positive factor. Students with fees paid are 94% less likely to drop out.
+
+Clearly financial factors dominate both sides.
+
+- A student who is a debtor and does not have fees paid is by far the highest dropout risk profile.
+
+- Financial support such as education bursaries, scholarships, etc are the single most powerful intervention point.
+
+- Academic performance in the 2nd semester (units approved) is the second most important domain.
+
+- Demographics like gender, age, special needs play a role but are less dominant than financial and academic factors.
 
 #### Model Evaluation
 
@@ -199,48 +300,7 @@ conf_matrix <- confusionMatrix(predicted_class, testing_data$target)
 conf_matrix
 ```
 
-From the confusion matrix results we see that our model is able to correctly predict the outcome 77% of the time (accuracy) while catching each outcome positively in each class (sensitivity/ recall) as follows: 94% of the time in the Graduate Class, 78% of the time in the Dropout Class, and 27% of the time in the Enrolled class.
-
-To get our biggest contributors to student dropout, we will exponentiate the coefficients from the model to get the Relative Risk Ratios(RRR) - similar to odds ratios.
-
-- If RRR = 1.0 -\> no effect
-
-- if RRR \> 1.0 -\> that variable increases the probability of being in that class vs the reference class (Graduate)
-
-- if RRR \< 1.0 -\> that variable increases the probability of being in that class vs the reference class (Graduate)
-
-For example: if the RRR for "Curricular units 1st sem (approved)" in the Graduate vs. Dropout row is 1.8, it means a student who passes one more unit in the first semester is 1.8× more likely to dropout than to graduate.
-
-```{r}
-# Relative Risk Ratios: exp(coefficients)
-rrr <- exp(coef(model_0))
-rrr
-```
-
-#### Variable importance: Which predictors matter most?
-
-```{r}
-importance <- varImp(model_0)
-# rank the variables by importance
-importance_df <- importance |>
-  rownames_to_column(("Variable")) |>
-  arrange(desc(Overall))
-
-# view the variables df
-head(importance_df)
-
-# plot the variables
-importance_df |>
-  slice_head(n = 15) |>
-  ggplot(aes(x = reorder(Variable,Overall), y = Overall))+
-  geom_col(fill ="steelblue") +
-  coord_flip()+
-  theme_minimal()+
-  labs(title = "Top 15 Most Important Predictors of Student Outcome",
-       x = "Variable",
-       y = "Importance Score")
-
-```
+From the confusion matrix results we see that our model is able to correctly predict the outcome 74.4% of the time (accuracy) while catching each outcome positively in each class (sensitivity/ recall) as follows: 92.4% of the time in the Graduate Class, 76.4% of the time in the Dropout Class, and 20.9% of the time in the Enrolled class. This low sensitivity in the 'Dropout' Class is likely due to the ambiguous nature of this class since they have not yet graduated or dropped out so their characteristics overlap with both other classes.
 
 ### Classification tree model: (using method= "class")
 
@@ -254,7 +314,13 @@ rpart.plot(model1)
 head(training_data)
 ```
 
-First value in each node = Predicted category (Low or High) Second value in each node = Proportion of non-baseline category of the outcome Third value in each node = Percent of data that falls in this node after the split (percent of data that follows this particular path in the tree)
+- Most important variable: Curricular_units_2nd_sem_approved, it appears at the very first split.
+
+- Financials factor is still critical, 'tuition_fees_up_to_date' appears on both branches. Even good students drop out without it.
+
+- Age matters only for struggling students. Age_at_enrollment only appears deeper in the tree for high risk students.
+
+- The tree confirms our logistic regression model since both models agree on the same top predictors i.e., curriucular_units_2nd_sem_approved (strongest positive factor), tuition_fees_up_to_date (strongest protective factor), age_at_enrollment(mild risk factor)
 
 #### Model Evaluation: Model 1
 
@@ -273,9 +339,11 @@ conf_matrix_1
 
 ```
 
-From the results, we see our model is 75% accurate in predicted which students will graduate! In addition, our kappa is 0.59 which is a moderate to substantial measure that our accuracy isn't just a fluke of having more 'Graduate' data points.
+From the results, we see our model is 75.5% accurate in predicted which students will graduate! In addition, our kappa is 0.59 which is a moderate to substantial measure that our accuracy isn't just a fluke of having more 'Graduate' data points.
 
 Our Model's sensitivity is 89% for 'Graduate Category' which means 89% of the time, it positively identifies students who will graduate, and 76% of the time it will identify students who will drop out or at high risk of dropping out which is a solid detection rate. Nevertheless, the model struggles to capture students who fall in the 'Enrolled class' (37.2%) - this is most likely because the 'Enrolled Class' is a middle ground category, so its features overlap with both other categories.
+
+Comparing the logistic regression model to the classification model, the classification model wins! The decision tree (classification model) has a higher accuracy (75.5% vs 74.4%), higher enrolled balanced accuracy (64.4% vs 57.9%).
 
 #### Variable importance Plot
 
@@ -285,74 +353,7 @@ vip(model1)+
   theme_minimal()
 ```
 
-### Regression tree.
-
-```{r}
-model2 <-rpart(formula = target ~ ., data = training_data, method = "anova")
-# we use 'anova' when developing a regression tree
-rpart.plot(model2)
-```
-
-#### Model Evaluation
-
-```{r}
-# make predictions on the test data
-predicted_class_2 <- predict(model2, newdata = testing_data)
-
-# Apply the model to testing data
-testing_data$predicted_class_2 <- predict(model2, newdata = testing_data, 
-                                          type = "vector")
-head(data.frame(testing_data$target, testing_data$predicted_class_2))
-
-# Convert both to numeric before calculating
-target_num <- as.numeric(as.character(testing_data$target))
-pred_num <- as.numeric(as.character(testing_data$predicted_class_2))
-
-# Calculate RSS
-rss <- sum((target_num - pred_num)^2)
-rss
-```
-
-#### Variable importance plot
-
-```{r}
-vip(model2)+
-  geom_col(fill = "steelblue")+
-  theme_minimal()
-```
-
-#### Pruning:
-
-This is to help in visualizing cross validation error for different complexity parameter (cp) values
-
-```{r}
-plotcp(model2)
-```
-
-plotcp() illustrates the set of possible cost-complexity (cp) values on x-axis y-axis shows relative cross validation error for various penalty values (cp values) horizontal line is drawn 1 standard error above the minimum of the curve
-
-Each penalty term corresponds to a "size of tree" which is the number of terminal nodes Smaller penalty (cp values) --\> larger trees Larger penalty (cp values) --\> smaller trees A good choice of cp for pruning is often the leftmost value for which the mean lies below the horizontal line Here: cp = 0.022 tree size of 3 (terminal nodes) provides optimal cross validation
-
-Pruned model using cp = 0.055
-
-```{r}
-pruned1 <- rpart(formula = target ~ .,data= training_data, method  = "anova", 
-                 control = list(cp = 0.022, xval = 10)) 
-                  # xval = 10 is a common validation number
-rpart.plot(pruned1)
-```
-
-We can try a different cp-value such as 0.014 that has more trees (5)
-
-```{r}
-pruned2 <- rpart(formula = target ~ .,data= training_data, 
-                 method  = "anova",  
-                 control = list(cp = 0.014, 
-                                xval = 10)) # xval = 10 is a common validation number
-rpart.plot(pruned2)
-```
-
-### Pruning and Random Forests (RF)
+### Random Forests (RF)
 
 Recall: Arguments of randomForest() function
 
@@ -367,17 +368,22 @@ Recall: Arguments of randomForest() function
 #### RF model 1
 
 ```{r}
-rf_model1 <- randomForest(target ~ ., data=training_data, 
-                          mtry = 8, importance=TRUE)
+set.seed(123) # for reproducibility
+rf_model1 <- randomForest(target ~ ., 
+                          data=training_data, 
+                          mtry = 5,
+                          importance=TRUE)
 
 # The default mtry for classification is the square root of the 
-# number of predictors. We have 36 predictors, therefore 9 would 
+# number of predictors. We have 21 predictors, therefore 5 would 
 # be a good value for mtry.
 
 rf_model1 
 ```
 
-The high error rate for the **Enrolled** class (61.8%) stands out. While the model is great at identifying students who graduate, it is struggling significantly to distinguish between students who are still Enrolled and those who have Dropped out.
+Our RF model has an overall OOB error rate of 24.72% meaning it is able to correctly classify 75.28 students.
+
+The high error rate for the **Enrolled** class (73.3%) stands out. While the model is great at identifying students who graduate, it is struggling significantly to distinguish between students who are still Enrolled and those who have Dropped out.
 
 Let's check how the Target class is balanced as any inbalance in the 'Target' categories could be causing this high error rate!
 
@@ -389,13 +395,15 @@ The table confirms a significant **class imbalance**: we have nearly three times
 
 Let's try a **Balanced Random Forest** by sampling an equal number of rows from each class when building the trees.
 
+#### Balanced RF model 1
+
 ```{r}
 # Let's set the sample size based on our smallest class (Enrolled = 555)
 # This forces the model to treat all classes with equal weight
 rf_model1_balanced <- randomForest(
   target ~ ., 
   data = training_data, 
-  mtry = 8, 
+  mtry = 5, 
   importance = TRUE,
   sampsize = c("Graduate" = 555, "Dropout" = 555, "Enrolled" = 555)
 )
@@ -403,15 +411,15 @@ rf_model1_balanced <- randomForest(
 print(rf_model1_balanced)
 ```
 
-This is a much better balance! By downsampling, we cut the **Enrolled** error rate from **67% down to 44%**.
+This is a much better balance! By downsampling, we cut the **Enrolled** error rate from **73% down to 51%**.
 
-While the overall out-of-bag (OOB) error rose slightly (from 22.8% to 24.5%), the model is now significantly more "honest" about the Enrolled class. It's no longer just defaulting to the majority labels.
+While the overall out-of-bag (OOB) error rose slightly (from 24.72% to 25.95%), the model is now significantly more "honest" about the Enrolled class. It's no longer just defaulting to the majority labels.
 
 Looking at the confusion matrix:
 
-- **Enrolled vs. Graduate:** 187 Graduates were mistaken for Enrolled, and 150 Enrolled were mistaken for Graduates. These two classes are still bleeding into each other, likely because their academic data (grades/credits) looks very similar.
+- **Enrolled vs. Graduate:** 182 Graduates were mistaken for Enrolled, and 181 Enrolled were mistaken for Graduates. These two classes are still bleeding into each other, likely because their academic data (grades/credits) looks very similar.
 
-- **The Trade-off:** The **Graduate** error doubled (from \~6% to 15%). This is the standard "price" of balancing; the model is no longer biased toward the majority, so it makes more mistakes there to get the minority class right.
+- **The Trade-off:** The **Graduate** error doubled (from \~7% to 15%). This is the standard "price" of balancing; the model is no longer biased toward the majority, so it makes more mistakes there to get the minority class right.
 
 #### Model Evaluation
 
@@ -424,7 +432,7 @@ brf_cm <- confusionMatrix(predicted_class_3, testing_data$target)
 brf_cm
 ```
 
-Our Enrolled sensitivity is now nearly 60% (59.8%) which means we are correctly identifying nearly 60% of the Enrolled Students. This is a massive jump from the 27% our logistic regression was catching. Our Kappa is 0.6448 in which a Kappa above 0.60 is generally considered a substantial agreement that our model's predictions are reliable and not just due to random chance or class size bias. Lastly, our Dropout class prediction is high 0.9457, meaning it is incredibly good at not falsely accusing a student of dropping out if they aren't actually doing so.
+Our Enrolled sensitivity is now nearly 54% (53.56%) which means we are correctly identifying nearly 54% of the Enrolled Students. Our accuracy is 77% (76.8) which is higher than our unbalanced random forest model (75.28) and also higher than our logistic regression (74.4%) and decision tree models (75.5%). Lastly, our Dropout class prediction is high 84.4%, meaning it is incredibly good at not falsely accusing a student of dropping out if they aren't actually doing so.
 
 Using the importance() function, we can view the importance of each importance() variable
 
@@ -439,7 +447,7 @@ vip(rf_model1_balanced)+
   geom_col(fill = "steelblue")
 ```
 
-1.  Looking at the variable importance plot and data, 'curricular_units_2nd_sem_approved' is the most important variable in predicting outcomes for our model. It has a massive Mean Decrease Gini of 134.2 and Mean Decrease Accuracy of 57.1, meaning it is the most critical variable in predicting whether a student graduates or drops out.
+1.  Looking at the variable importance plot and data, 'curricular_units_2nd_sem_approved' is the most important variable in predicting outcomes for our model. It has a massive Mean Decrease Gini of 199.96 and Mean Decrease Accuracy of 79.08, meaning it is the most critical variable in predicting whether a student graduates or drops out.
 
     In addition, the top predictors are almost all related to the 2nd semester:
 
@@ -447,11 +455,9 @@ vip(rf_model1_balanced)+
 
     - curricular_units_2nd_sem_grade
 
-    - curricular_units_1st_sem_approved
-
       If a student is failing to get credits approved in the second semester, the model is very confident they will drop out.
 
-2.  Tuition is the most important non-academic variable. It has a high Dropout specific accuracy score (40.0), suggesting that being behind on fees is a huge red flag for immediate dropout.
+2.  Tuition is the most important non-academic variable. It has a high Dropout specific accuracy score (43.3), suggesting that being behind on fees is a huge red flag for immediate dropout.
 
 3.  The 'Enrolled' column in the importance table has much lower values than other classes columns. This explains why our 'Enrolled' error is still high! The model has great features of identifying student success (Graduate) or failure (Dropout) but the features aren't very good at identifying enrolled students i.e., the 'in-between'.
 
@@ -461,17 +467,15 @@ Recap: When running the variable importance under our logistic regression model,
 
 - Nonlinear vs Linear: Logistic regression looks for a straight line relationship. Therefore, if being an international student has a consistent, small impact across the board, then the regression model might flag it as highly significant. However, the Random Forest, looks for 'splits'. If 'curricular_units_2nd_sem_approved' is a much more powerful way to divide the data into groups, the Random Forest will prioritize it and ignore 'weaker' signals like 'international'.
 
-- Importance Scale: In our variable importance plot in the logistic regression, our scale of importance only goes up to 4 whereas in the Random Forest, the Gini importance for academic units went up to 134. This suggests that while 'international' is statistically significant in a regression, its actual predictive power is tiny compared to grades and credits!
+- Importance Scale: In our variable importance plot in the logistic regression, our scale of importance only goes up to 4 whereas in the Random Forest, the Gini importance for academic units went up to 199. This suggests that while 'international' is statistically significant in a regression, its actual predictive power is tiny compared to grades and credits!
 
 ### Conclusion
 
-Looking at the models above: Multinomial logistic regression, Classification tree, Regression tree, and Random Forest, there is a general theme of variables with 'grades' and 'credits' having more predictive power in determining whether a student will graduate.
+Looking at the models above: Multinomial logistic regression, Classification tree, and Random Forest, there is a general theme of variables with 'grades' having more predictive power in determining whether a student will graduate.
 
-Looking at the model results, Multinomial logistic regression has the highest overall accuracy (76.9%) of all the models, but it also the worst at identfying the 'Enrolled' group (Enrolled sensitivity: 27.6%). The logistic regression is very good at chasing the accuracy by being extremely good at predicting the majority class (Graduate Sensitivity: 93.6%) while ignoring the minority sensitivity (Enrolled Sensitivity: 27.6%).
+Looking at the model results, the Balanced Random Forest has the highest overall accuracy (76.8%) of all the models, but it also the worst at noting that the 'Enrolled' group (Enrolled sensitivity: 53.6%) is higher than in the other models but it's the lowest in 'Graduate sensitivity': 86.3%. The Balanced Random Forest is not the best in predicting the majority class (Graduate sensitivity': 86.3%) but it does best in not ignoring the minority sensitivity (Enrolled sensitivity: 53.6%).
 
-Essentially, our logistic model is biased. It only correctly identified 66 enrolled students and misclassifies 103 enrolled students as Graduates. If we used this in a school, we would miss nearly 73% of the students who are currently 'stuck' in enrollment and might need help.
-
-Looking at the balanced accuracy tells the truth: The balanced accuracy for the Enrolled class in the logistic model is 60.6%, which is lower than the Classification tree model (64.4%) and much lower than that of our Balanced Random Forest (73.7%). Therefore, the Balanced Random Forest is much better as it has a higher accuracy for the minority class across the different models.
+Looking at the balanced accuracy tells the truth: The balanced accuracy for the Enrolled class in the logistic model is 81.6%, which is lower than the Classification tree model (83.5%) and much lower than that of our Balanced Random Forest (84.3%). Therefore, the Balanced Random Forest is much better as it has a higher accuracy for the minority class across the different models.
 
 The balanced Random Forest is our most fair and useful model as it provides the best 'safety net' for the Enrolled students without sacrificing too much performance on Graduates and Dropouts. The logistic regression remains the most accurate overall.
 
@@ -482,9 +486,9 @@ The balanced Random Forest is our most fair and useful model as it provides the 
 comparison_data <- data.frame(
   Model = c("Multinomial Logistic", "Classification Tree", 
             "Balanced Random Forest"),
-  Graduate = c(0.937, 0.890, 0.847),
-  Dropout = c(0.785, 0.759, 0.730),
-  Enrolled = c(0.276, 0.372, 0.544) # RF scores from the balanced OOB
+  Graduate = c(0.925, 0.890, 0.863),
+  Dropout = c(0.764, 0.759, 0.752),
+  Enrolled = c(0.209, 0.372, 0.536) # RF scores from the balanced OOB
 )
 
 # Reshape for plotting
