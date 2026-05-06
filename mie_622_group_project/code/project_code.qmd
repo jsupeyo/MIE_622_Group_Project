@@ -350,6 +350,8 @@ Comparing the logistic regression model to the classification model, the classif
 ```{r}
 vip(model1)+
   geom_col(fill="steelblue")+
+  labs( title = "Variable Importance Plot",
+        subtitle = "Classification Model")+
   theme_minimal()
 ```
 
@@ -383,7 +385,7 @@ rf_model1
 
 Our RF model has an overall OOB error rate of 24.72% meaning it is able to correctly classify 75.28 students.
 
-The high error rate for the **Enrolled** class (73.3%) stands out. While the model is great at identifying students who graduate, it is struggling significantly to distinguish between students who are still Enrolled and those who have Dropped out.
+The high error rate for the **Enrolled** class (73.3%) stands out. While the model is great at identifying students who graduate, it is struggling significantly to distinguish between students who have Dropped out and those who have Graduated.
 
 Let's check how the Target class is balanced as any inbalance in the 'Target' categories could be causing this high error rate!
 
@@ -391,7 +393,7 @@ Let's check how the Target class is balanced as any inbalance in the 'Target' ca
 table(training_data$target)
 ```
 
-The table confirms a significant **class imbalance**: we have nearly three times as many Graduates as Enrolled students. The model is biased toward the "Graduate" class because it has the most observations (1,546). The "Enrolled" class is the smallest, leading the model to misclassify 224 Enrolled students as Graduates!
+The table confirms a significant **class imbalance**: we have nearly three times as many Graduates as Enrolled students. The model is biased toward the "Graduate" class because it has the most observations (1,546). The "Enrolled" class is the smallest, leading the model to misclassify 256 Enrolled students as Graduates!
 
 Let's try a **Balanced Random Forest** by sampling an equal number of rows from each class when building the trees.
 
@@ -444,7 +446,10 @@ importance(rf_model1_balanced)
 
 # variable importance plot
 vip(rf_model1_balanced)+
-  geom_col(fill = "steelblue")
+  geom_col(fill = "steelblue")+
+  labs( title = "Variable Importance Plot",
+        subtitle = "Balanced Random Forest Model")+
+  theme_minimal()
 ```
 
 1.  Looking at the variable importance plot and data, 'curricular_units_2nd_sem_approved' is the most important variable in predicting outcomes for our model. It has a massive Mean Decrease Gini of 199.96 and Mean Decrease Accuracy of 79.08, meaning it is the most critical variable in predicting whether a student graduates or drops out.
