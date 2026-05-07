@@ -383,7 +383,7 @@ rf_model1 <- randomForest(target ~ .,
 rf_model1 
 ```
 
-Our RF model has an overall OOB error rate of 24.72% meaning it is able to correctly classify 75.28 students.
+Our RF model has an overall OOB error rate of 24.72% meaning it is able to correctly classify 75.28% students.
 
 The high error rate for the **Enrolled** class (73.3%) stands out. While the model is great at identifying students who graduate, it is struggling significantly to distinguish between students who have Dropped out and those who have Graduated.
 
